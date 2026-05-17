@@ -1,0 +1,196 @@
+{
+  "generated_at": "2026-05-17T04:23:12.236507+00:00",
+  "image_count": 10,
+  "entities": [
+    {
+      "entity_id": "CLS_1",
+      "image_path": "data/images/Drone-1024x651.jpg",
+      "classification": {
+        "image_path": "/Volumes/PRO-G40/Q1 2026 PERSONAL FILES/LHX CHALLENGE 4/Quest Two/MVP/ARIES/data/images/Drone-1024x651.jpg",
+        "name": "Predator Drone",
+        "allegiance": "friendly",
+        "domain": "air",
+        "entity_type": "friendly_vehicle",
+        "threat_level": 3,
+        "confidence": 0.9,
+        "description": "A Predator drone flying over a mountainous terrain.",
+        "rationale": "As a NATO/US military drone, it is classified as friendly but with a low threat level due to the context.",
+        "should_spawn_in_simulation": true,
+        "recommended_symbol": "?",
+        "safety_notes": "",
+        "source": "openai"
+      }
+    },
+    {
+      "entity_id": "CLS_2",
+      "image_path": "data/images/images-4.jpeg",
+      "classification": {
+        "image_path": "/Volumes/PRO-G40/Q1 2026 PERSONAL FILES/LHX CHALLENGE 4/Quest Two/MVP/ARIES/data/images/images-4.jpeg",
+        "name": "FPV Drone",
+        "allegiance": "enemy",
+        "domain": "air",
+        "entity_type": "enemy_drone",
+        "threat_level": 8,
+        "confidence": 0.9,
+        "description": "A multi-rotor drone equipped with a bomb.",
+        "rationale": "The drone is armed and poses an immediate threat in a military context.",
+        "should_spawn_in_simulation": true,
+        "recommended_symbol": "?",
+        "safety_notes": "",
+        "source": "cache"
+      }
+    },
+    {
+      "entity_id": "CLS_3",
+      "image_path": "data/images/Registry-of-the-American-Soldier.png",
+      "classification": {
+        "image_path": "/Volumes/PRO-G40/Q1 2026 PERSONAL FILES/LHX CHALLENGE 4/Quest Two/MVP/ARIES/data/images/Registry-of-the-American-Soldier.png",
+        "name": "US Soldier",
+        "allegiance": "friendly",
+        "domain": "ground",
+        "entity_type": "friendly_human",
+        "threat_level": 5,
+        "confidence": 0.9,
+        "description": "A soldier in combat uniform holding a rifle in a desert environment.",
+        "rationale": "The presence of a US military uniform indicates a friendly unit.",
+        "should_spawn_in_simulation": true,
+        "recommended_symbol": "?",
+        "safety_notes": "",
+        "source": "cache"
+      }
+    },
+    {
+      "entity_id": "CLS_4",
+      "image_path": "data/images/friendly_soldier.jpg",
+      "classification": {
+        "image_path": "/Volumes/PRO-G40/Q1 2026 PERSONAL FILES/LHX CHALLENGE 4/Quest Two/MVP/ARIES/data/images/friendly_soldier.jpg",
+        "name": "friendly soldier",
+        "allegiance": "friendly",
+        "domain": "ground",
+        "entity_type": "friendly_human",
+        "threat_level": 1,
+        "confidence": 0.88,
+        "description": "A friendly or allied military person.",
+        "rationale": "Friendly classification must not become an enemy target.",
+        "should_spawn_in_simulation": false,
+        "recommended_symbol": "?",
+        "safety_notes": "",
+        "source": "mock"
+      }
+    },
+    {
+      "entity_id": "CLS_5",
+      "image_path": "data/images/War_Memorial_park-1.jpg",
+      "classification": {
+        "image_path": "/Volumes/PRO-G40/Q1 2026 PERSONAL FILES/LHX CHALLENGE 4/Quest Two/MVP/ARIES/data/images/War_Memorial_park-1.jpg",
+        "name": "T-34 Tank",
+        "allegiance": "enemy",
+        "domain": "ground",
+        "entity_type": "enemy_ground_vehicle",
+        "threat_level": 8,
+        "confidence": 0.9,
+        "description": "A T-34 tank with Soviet markings on display.",
+        "rationale": "This tank features distinct Soviet designs and markings, indicating it is enemy equipment and poses a significant historical and symbolic military relevance.",
+        "should_spawn_in_simulation": true,
+        "recommended_symbol": "?",
+        "safety_notes": "",
+        "source": "cache"
+      }
+    },
+    {
+      "entity_id": "CLS_6",
+      "image_path": "data/images/images-1.jpeg",
+      "classification": {
+        "image_path": "/Volumes/PRO-G40/Q1 2026 PERSONAL FILES/LHX CHALLENGE 4/Quest Two/MVP/ARIES/data/images/images-1.jpeg",
+        "name": "Unknown Soldiers",
+        "allegiance": "enemy",
+        "domain": "ground",
+        "entity_type": "enemy_infantry",
+        "threat_level": 7,
+        "confidence": 0.9,
+        "description": "Three armed soldiers in military uniforms with blue berets salute in formation.",
+        "rationale": "The presence of armed infantry in adversary uniforms indicates a potential military threat.",
+        "should_spawn_in_simulation": true,
+        "recommended_symbol": "?",
+        "safety_notes": "",
+        "source": "openai"
+      }
+    },
+    {
+      "entity_id": "CLS_7",
+      "image_path": "data/images/images-6.jpeg",
+      "classification": {
+        "image_path": "/Volumes/PRO-G40/Q1 2026 PERSONAL FILES/LHX CHALLENGE 4/Quest Two/MVP/ARIES/data/images/images-6.jpeg",
+        "name": "FPV Drone",
+        "allegiance": "enemy",
+        "domain": "air",
+        "entity_type": "enemy_drone",
+        "threat_level": 8,
+        "confidence": 0.9,
+        "description": "An armed FPV drone equipped with a bomb-like payload.",
+        "rationale": "The drone is armed and capable of causing immediate harm, indicating a high threat level.",
+        "should_spawn_in_simulation": true,
+        "recommended_symbol": "?",
+        "safety_notes": "",
+        "source": "openai"
+      }
+    },
+    {
+      "entity_id": "CLS_8",
+      "image_path": "data/images/2025-01-29T000000Z_1777932153_MT1NURPHO0006XI347_RTRMADP_3_UKRAINE-ARMEDFORCES-DRONE-scaled-e1748543554142-1024x751.jpg",
+      "classification": {
+        "image_path": "/Volumes/PRO-G40/Q1 2026 PERSONAL FILES/LHX CHALLENGE 4/Quest Two/MVP/ARIES/data/images/2025-01-29T000000Z_1777932153_MT1NURPHO0006XI347_RTRMADP_3_UKRAINE-ARMEDFORCES-DRONE-scaled-e1748543554142-1024x751.jpg",
+        "name": "FPV Drone",
+        "allegiance": "enemy",
+        "domain": "air",
+        "entity_type": "enemy_drone",
+        "threat_level": 8,
+        "confidence": 0.85,
+        "description": "An armed drone equipped with a device underneath.",
+        "rationale": "The presence of an attached payload indicates potential offensive capability, classifying it as an active threat.",
+        "should_spawn_in_simulation": true,
+        "recommended_symbol": "?",
+        "safety_notes": "",
+        "source": "openai"
+      }
+    },
+    {
+      "entity_id": "CLS_9",
+      "image_path": "data/images/alabino110416-27.jpg",
+      "classification": {
+        "image_path": "/Volumes/PRO-G40/Q1 2026 PERSONAL FILES/LHX CHALLENGE 4/Quest Two/MVP/ARIES/data/images/alabino110416-27.jpg",
+        "name": "T-72 Tank",
+        "allegiance": "enemy",
+        "domain": "ground",
+        "entity_type": "enemy_ground_vehicle",
+        "threat_level": 8,
+        "confidence": 0.9,
+        "description": "A T-72 tank identified by its distinct shape and features, with visible enemy markings.",
+        "rationale": "The presence of a T-72 tank indicates a significant military asset associated with adversary forces, posing an active threat.",
+        "should_spawn_in_simulation": true,
+        "recommended_symbol": "?",
+        "safety_notes": "",
+        "source": "openai"
+      }
+    },
+    {
+      "entity_id": "CLS_10",
+      "image_path": "data/images/War_Memorial_park.jpg",
+      "classification": {
+        "image_path": "/Volumes/PRO-G40/Q1 2026 PERSONAL FILES/LHX CHALLENGE 4/Quest Two/MVP/ARIES/data/images/War_Memorial_park.jpg",
+        "name": "T-34 Tank",
+        "allegiance": "enemy",
+        "domain": "ground",
+        "entity_type": "enemy_ground_vehicle",
+        "threat_level": 8,
+        "confidence": 0.9,
+        "description": "A T-34 tank with Soviet markings on display.",
+        "rationale": "This tank features distinct Soviet designs and markings, indicating it is enemy equipment and poses a significant historical and symbolic military relevance.",
+        "should_spawn_in_simulation": true,
+        "recommended_symbol": "?",
+        "safety_notes": "",
+        "source": "cache"
+      }
+    }
+  ]
+}

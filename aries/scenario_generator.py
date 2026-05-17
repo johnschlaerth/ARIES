@@ -70,7 +70,7 @@ def generate_scenario_payload(config: dict[str, Any], seed: int | None = None) -
         "map": {
             "width": width,
             "height": height,
-            "terrain_seed": int(sim_cfg.get("seed", 42)) if generation.get("terrain_seed") is None else int(generation["terrain_seed"]),
+            "terrain_seed": rng.randint(1, 999_999_999) if generation.get("terrain_seed") is None else int(generation["terrain_seed"]),
             "contour_count": int(generation.get("contour_count", 18)),
             "objective_position": objective,
             "friendly_base_position": base,
@@ -104,6 +104,7 @@ def generate_scenario_payload(config: dict[str, Any], seed: int | None = None) -
         })
 
     _assign_existing_images(payload, config)
+    _inject_classified_entities(payload, config, rng, width, height)
     return payload
 
 
@@ -189,6 +190,80 @@ def _assign_existing_images(payload: dict[str, Any], config: dict[str, Any]) -> 
     max_assignments = min(len(images), len(payload["enemy_entities"]), int(config.get("scenario_generation", {}).get("max_image_assignments", 3)))
     for entity, image in zip(payload["enemy_entities"][:max_assignments], images[:max_assignments]):
         payload["image_assignments"].append({"entity_id": entity["id"], "image_path": str(image.relative_to(Path(config["_root"])))})
+
+
+def _inject_classified_entities(
+    payload: dict[str, Any],
+    config: dict[str, Any],
+    rng: random.Random,
+    width: int,
+    height: int,
+) -> None:
+    """Inject spawnable entities from the classifier pipeline config into the scenario."""
+    try:
+        from .classifier_pipeline import load_classified_entities
+        from .constants import DOMAINS, ENTITY_TYPES
+    except ImportError:
+        return
+
+    for entry in load_classified_entities(config):
+        cls = entry.get("classification", {})
+        if not cls.get("should_spawn_in_simulation", False):
+            continue
+        allegiance = cls.get("allegiance", "unknown")
+        entity_type = cls.get("entity_type", "unknown_contact")
+        domain = cls.get("domain", "ground")
+        if entity_type not in ENTITY_TYPES or domain not in DOMAINS:
+            continue
+        # Friendly classified entities go to neutral_entities as non-targets —
+        # they appear on the map but the ARIES system won't engage them.
+        neutral_types = {"non_threat_object", "neutral_civilian", "non_threat_animal",
+                         "friendly_human", "friendly_vehicle"}
+        if allegiance == "friendly":
+            safe_type = entity_type if entity_type in neutral_types else "friendly_vehicle"
+            payload["neutral_entities"].append({
+                "id": entry.get("entity_id", f"CLS_{rng.randint(100, 999)}"),
+                "name": cls.get("name", "Friendly Asset")[:32],
+                "allegiance": "neutral",
+                "domain": domain,
+                "entity_type": safe_type,
+                "position": [
+                    round(rng.uniform(width * 0.40, width * 0.70), 1),
+                    round(rng.uniform(height * 0.10, height * 0.90), 1),
+                ],
+                "speed": 0.0,
+                "threat_level": 1,
+                "confidence": float(cls.get("confidence", 0.5)),
+                "description": cls.get("description", ""),
+                "classification_source": "classified",
+            })
+            continue
+
+        entity_dict: dict[str, Any] = {
+            "id": entry.get("entity_id", f"CLS_{rng.randint(100, 999)}"),
+            "name": cls.get("name", "Classified Entity")[:32],
+            "allegiance": allegiance if allegiance in {"enemy", "neutral", "unknown"} else "unknown",
+            "domain": domain,
+            "entity_type": entity_type,
+            "position": [
+                round(rng.uniform(width * 0.65, width * 0.95), 1),
+                round(rng.uniform(height * 0.10, height * 0.90), 1),
+            ],
+            "speed": 3.0 if domain == "air" else 2.0,
+            "threat_level": int(cls.get("threat_level", 3)),
+            "confidence": float(cls.get("confidence", 0.5)),
+            "description": cls.get("description", ""),
+            "classification_source": "classified",
+        }
+        if allegiance == "enemy":
+            payload["enemy_entities"].append(entity_dict)
+        elif allegiance == "neutral":
+            entity_dict["entity_type"] = entity_type if entity_type in neutral_types else "non_threat_object"
+            payload["neutral_entities"].append(entity_dict)
+        else:  # unknown — treat conservatively as potential threat
+            entity_dict["entity_type"] = "unknown_contact"
+            entity_dict["allegiance"] = "unknown"
+            payload["enemy_entities"].append(entity_dict)
 
 
 def _bounded(value: float, low: float, high: float) -> float:

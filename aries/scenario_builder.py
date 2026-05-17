@@ -3,9 +3,11 @@
 from __future__ import annotations
 
 import json
+import random
 from pathlib import Path
 from typing import Any
 
+from .classifier_pipeline import load_classified_entities
 from .config_loader import load_config, load_scenario
 from .scenario_generator import generate_scenario_payload
 
@@ -35,6 +37,12 @@ def main() -> None:
     pygame.init()
     font = pygame.font.SysFont("courier", 16)
     small = pygame.font.SysFont("courier", 13)
+
+    classified_spawnable = [
+        e for e in load_classified_entities(config)
+        if e.get("classification", {}).get("should_spawn_in_simulation", False)
+    ]
+    selected_classified: dict[str, Any] | None = None
 
     selected_key = "1"
     entities: list[dict[str, Any]] = []
@@ -72,9 +80,22 @@ def main() -> None:
                     selected_entity = find_entity_at(entities, event.pos)
                     if selected_entity:
                         drag_offset = [selected_entity["position"][0] - event.pos[0], selected_entity["position"][1] - event.pos[1]]
+                    elif selected_classified is not None:
+                        entities.append(make_entity_from_classification(selected_classified, event.pos, entities))
+                        status = f"Placed classified: {selected_classified['entity_id']}"
+                        selected_classified = None
                     else:
                         entities.append(make_entity(selected_key, event.pos, entities))
                         status = f"Placed {ENTITY_CHOICES[selected_key][2]}"
+                else:
+                    # Check if a classified entity row was clicked in the right panel
+                    panel_classified_start_y = 76 + len(ENTITY_CHOICES) * 18 + 14 + 7 * 18 + 28
+                    for idx, entry in enumerate(classified_spawnable[:8]):
+                        row_y = panel_classified_start_y + idx * 16
+                        if row_y <= event.pos[1] <= row_y + 16:
+                            selected_classified = entry
+                            status = f"Selected {entry['entity_id']} — click map to place"
+                            break
             elif event.type == pygame.MOUSEBUTTONUP and event.button == 1:
                 selected_entity = None
             elif event.type == pygame.MOUSEMOTION and selected_entity:
@@ -83,7 +104,8 @@ def main() -> None:
                     round(max(0, min(height, event.pos[1] + drag_offset[1])), 1),
                 ]
 
-        draw_builder(screen, font, small, config, entities, selected_key, status)
+        draw_builder(screen, font, small, config, entities, selected_key, status,
+                     classified_spawnable=classified_spawnable, selected_classified=selected_classified)
         pygame.display.flip()
     pygame.quit()
 
@@ -120,6 +142,30 @@ def make_entity(selected_key: str, position: tuple[int, int], existing: list[dic
     }
 
 
+def make_entity_from_classification(
+    entry: dict[str, Any], position: tuple[int, int], existing: list[dict[str, Any]]
+) -> dict[str, Any]:
+    cls = entry["classification"]
+    entity_id = entry["entity_id"]
+    if any(e["id"] == entity_id for e in existing):
+        entity_id = f"{entity_id}b"
+    return {
+        "id": entity_id,
+        "name": cls.get("name", "Classified")[:32],
+        "allegiance": cls.get("allegiance", "unknown"),
+        "domain": cls.get("domain", "ground"),
+        "entity_type": cls.get("entity_type", "unknown_contact"),
+        "payload_type": "none",
+        "position": [float(position[0]), float(position[1])],
+        "speed": 3.0 if cls.get("domain") == "air" else 2.0,
+        "threat_level": int(cls.get("threat_level", 3)),
+        "confidence": float(cls.get("confidence", 0.5)),
+        "effect_range": 80,
+        "effect_probability": 0.8,
+        "magazine": None,
+    }
+
+
 def build_scenario_payload(entities: list[dict[str, Any]], config: dict[str, Any]) -> dict[str, Any]:
     generation = config.get("scenario_generation", {})
     width = int(generation.get("map_width", 1000))
@@ -130,7 +176,7 @@ def build_scenario_payload(entities: list[dict[str, Any]], config: dict[str, Any
         "map": {
             "width": width,
             "height": height,
-            "terrain_seed": int(config.get("simulation", {}).get("seed", 42)),
+            "terrain_seed": random.randint(1, 999_999_999),
             "contour_count": int(generation.get("contour_count", 18)),
             "objective_position": [int(width * 0.84), int(height * 0.5)],
             "friendly_base_position": [int(width * 0.10), int(height * 0.5)],
@@ -165,7 +211,17 @@ def find_entity_at(entities: list[dict[str, Any]], pos: tuple[int, int]) -> dict
     return None
 
 
-def draw_builder(screen, font, small, config: dict[str, Any], entities: list[dict[str, Any]], selected_key: str, status: str) -> None:
+def draw_builder(
+    screen,
+    font,
+    small,
+    config: dict[str, Any],
+    entities: list[dict[str, Any]],
+    selected_key: str,
+    status: str,
+    classified_spawnable: list[dict[str, Any]] | None = None,
+    selected_classified: dict[str, Any] | None = None,
+) -> None:
     import pygame
 
     width = int(config.get("scenario_generation", {}).get("map_width", 1000))
@@ -175,6 +231,12 @@ def draw_builder(screen, font, small, config: dict[str, Any], entities: list[dic
     pygame.draw.line(screen, (90, 20, 20), (width * 0.70, 0), (width * 0.70, height), 1)
     screen.blit(font.render("FRIENDLY SIDE", True, (0, 180, 120)), (20, 16))
     screen.blit(font.render("ENEMY SIDE", True, (220, 50, 50)), (int(width * 0.74), 16))
+
+    # Highlight selected classified entity on map (cursor indicator)
+    if selected_classified is not None:
+        hint = f"[ {selected_classified['entity_id']} selected — click map to place ]"
+        screen.blit(small.render(hint, True, (0, 220, 230)), (20, height - 22))
+
     for entity in entities:
         x, y = [int(v) for v in entity["position"]]
         color = color_for(entity)
@@ -191,9 +253,28 @@ def draw_builder(screen, font, small, config: dict[str, Any], entities: list[dic
         screen.blit(small.render(line, True, color_for_choice(choice)), (panel_x, y))
         y += 18
     y += 14
-    for line in ["Mouse click: place", "Drag marker: move", "R: random sensible setup", "S: save builder_scenario", "L: load builder_scenario", "C: clear", "ESC: quit"]:
+    for line in ["Mouse click: place", "Drag marker: move", "R: random sensible setup",
+                 "S: save builder_scenario", "L: load builder_scenario", "C: clear", "ESC: quit"]:
         screen.blit(small.render(line, True, (220, 220, 220)), (panel_x, y))
         y += 18
+
+    # Classified entities panel
+    y += 14
+    screen.blit(font.render("CLASSIFIED ENTITIES", True, (0, 220, 230)), (panel_x, y))
+    y += 20
+    if not classified_spawnable:
+        screen.blit(small.render("(run run_classifier_gui.py first)", True, (80, 80, 80)), (panel_x, y))
+    else:
+        for entry in classified_spawnable[:8]:
+            cls = entry["classification"]
+            name = cls.get("name", "Unknown")[:22]
+            allegiance = cls.get("allegiance", "?")
+            is_selected = selected_classified is not None and selected_classified.get("entity_id") == entry.get("entity_id")
+            base_color = (240, 40, 40) if allegiance == "enemy" else (180, 180, 180) if allegiance == "neutral" else (200, 200, 200)
+            color = (255, 255, 100) if is_selected else base_color
+            marker = ">" if is_selected else " "
+            screen.blit(small.render(f"{marker}{entry['entity_id']}: {name}", True, color), (panel_x, y))
+            y += 16
 
 
 def color_for(entity: dict[str, Any]) -> tuple[int, int, int]:

@@ -38,10 +38,13 @@ class ImageClassifier:
         image_hash = file_sha256(image_path)
         # Mock mode is deliberately table-driven so demos/tests can exercise
         # named safety cases even when placeholder image bytes are identical.
-        # Cache reuse is primarily to prevent repeated API calls.
+        # Cache reuse is primarily to prevent repeated API calls — but only
+        # reuse entries that came from a real API call, not stale mock results.
+        _stale_sources = {"mock", "fallback", "missing_file", "invalid", "invalid_api_json"}
         if mode != "mock" and self.config.get("openai", {}).get("cache_results", True) and image_hash in self.cache:
-            cached = self.cache[image_hash]["result"]
-            return ClassificationResult.from_payload(str(image_path), cached, source=cached.get("source", "cache"))
+            cached = self.cache[image_hash].get("result", {})
+            if cached.get("source") not in _stale_sources:
+                return ClassificationResult.from_payload(str(image_path), cached, source="cache")
         if mode == "api" and self.config.get("openai", {}).get("enabled", False):
             result = self._classify_api_with_fallback(image_path)
         else:
@@ -71,13 +74,20 @@ class ImageClassifier:
             compressed = compress_image(image_path, self.root / "outputs" / "temp", int(openai_cfg.get("image_max_side_px", 512)))
             encoded = base64.b64encode(compressed.read_bytes()).decode("ascii")
             prompt = (
-                "Return only valid JSON matching this schema: "
-                '{"name":"short object name","allegiance":"friendly | enemy | neutral | unknown",'
-                '"domain":"ground | air | fixed | non_threat","entity_type":"enemy_drone | enemy_ground_vehicle | '
-                'enemy_ew | enemy_infantry | enemy_unknown | friendly_human | friendly_vehicle | neutral_civilian | '
-                'non_threat_animal | non_threat_object | unknown_contact","threat_level":1,"confidence":0.0,'
-                '"description":"one sentence","rationale":"one sentence","should_spawn_in_simulation":true}. '
-                "Do not force non-threats, animals, civilians, or friendly/allied people into enemy categories."
+                "You are a military threat classification AI. Analyze this image and return ONLY a raw JSON object — "
+                "no markdown fences, no explanation, just the JSON. Use this exact schema:\n"
+                '{"name":"<specific object name, e.g. FPV Drone, T-72 Tank, US Soldier>","allegiance":"<friendly|enemy|neutral|unknown>","domain":"<ground|air|fixed|non_threat>","entity_type":"<enemy_drone|enemy_ground_vehicle|enemy_ew|enemy_infantry|enemy_unknown|friendly_human|friendly_vehicle|neutral_civilian|non_threat_animal|non_threat_object|unknown_contact>","threat_level":<integer 1-10>,"confidence":<float 0.0-1.0>,"description":"<one sentence describing exactly what you see>","rationale":"<one sentence on threat assessment>","should_spawn_in_simulation":<true|false>}\n'
+                "Allegiance rules — be decisive, not conservative:\n"
+                "- US/NATO military equipment or soldiers = friendly\n"
+                "- Russian, Chinese, Iranian, North Korean, or non-NATO adversary military = enemy\n"
+                "- FPV drones, loitering munitions, armed UAVs = enemy_drone, allegiance=enemy, threat_level 7-9\n"
+                "- Recon drones (Predator/Reaper/military UAV) = enemy_drone if adversary, friendly_vehicle if US/NATO\n"
+                "- Armored vehicles with Russian/Soviet markings or Z/V symbols = enemy, threat_level 7-9\n"
+                "- Armed infantry in adversary uniforms = enemy_infantry, threat_level 6-8\n"
+                "- threat_level scale: 1=civilian/no threat, 3=low risk, 5=armed military, 7=active threat, 9-10=immediate deadly threat\n"
+                "- confidence: how certain you are of this classification (0.0=guessing, 0.5=likely, 0.9=certain)\n"
+                "- should_spawn_in_simulation: true for any military entity, false for monuments, pets, civilians\n"
+                "- If image has no military content, use domain=non_threat, allegiance=neutral, threat_level=1"
             )
             client = OpenAI(api_key=api_key, timeout=openai_cfg.get("timeout_seconds", 20))
             attempts = max(1, int(openai_cfg.get("max_retries", 2)))
@@ -102,7 +112,8 @@ class ImageClassifier:
                     return result
                 last_result = result
             return last_result
-        except Exception:
+        except Exception as exc:
+            print(f"[classifier] API error for {image_path.name}: {exc}")
             return self._classify_mock(image_path)
         finally:
             if compressed is not None:

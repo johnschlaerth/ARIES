@@ -198,6 +198,8 @@ class Renderer:
         for line in ["RED enemy", "BLUE comms", "CYAN ew", "GREEN isr/effect", "YELLOW c-uas", "X disabled"]:
             self.draw_text(line, (x, y), "white", self.small)
             y += 17
+        y += 6
+        self.draw_text("B: builder / classifier", (x, y), "gray", self.small)
         y = self.height - 155
         self.draw_text("EVENT LOG", (10, y), "yellow")
         y += 20

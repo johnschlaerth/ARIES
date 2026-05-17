@@ -9,9 +9,14 @@ def run_cmd(args: list[str]) -> subprocess.CompletedProcess[str]:
 
 
 def test_run_classifier_script_mock_folder():
+    from pathlib import Path
+    image_count = sum(
+        1 for p in Path("data/images").iterdir()
+        if p.suffix.lower() in {".jpg", ".jpeg", ".png"}
+    )
     result = run_cmd([sys.executable, "run_classifier.py", "--mode", "mock", "--folder", "data/images"])
     assert result.returncode == 0
-    assert result.stdout.count('"source": "mock"') == 5
+    assert result.stdout.count('"source": "mock"') == image_count
     assert '"entity_type": "non_threat_animal"' in result.stdout
 
 

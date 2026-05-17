@@ -9,11 +9,16 @@ def test_generated_scenario_respects_sides_and_caps():
     payload = generate_scenario_payload(config, seed=123)
     width = payload["map"]["width"]
 
+    # Classified entities from classifier_pipeline may supplement the base generation;
+    # exclude them from cap and position checks which apply only to random-generated enemies.
+    base_enemies = [e for e in payload["enemy_entities"] if e.get("classification_source") != "classified"]
+    base_neutrals = [e for e in payload["neutral_entities"] if e.get("classification_source") != "classified"]
+
     assert len(payload["friendly_entities"]) == 5
-    assert config["scenario_generation"]["min_enemies"] <= len(payload["enemy_entities"]) <= config["scenario_generation"]["max_enemies"]
-    assert len(payload["neutral_entities"]) <= config["scenario_generation"]["max_neutrals"]
+    assert config["scenario_generation"]["min_enemies"] <= len(base_enemies) <= config["scenario_generation"]["max_enemies"]
+    assert len(base_neutrals) <= config["scenario_generation"]["max_neutrals"]
     assert all(entity["position"][0] <= width * 0.32 for entity in payload["friendly_entities"])
-    assert all(entity["position"][0] >= width * 0.70 for entity in payload["enemy_entities"])
+    assert all(entity["position"][0] >= width * 0.70 for entity in base_enemies)
 
 
 def test_generated_scenario_seed_is_repeatable():
@@ -53,7 +58,10 @@ def test_random_headless_run_completes_with_capped_entities():
         sim.step()
 
     assert sim.state.outcome in {"ALL_THREATS_DISABLED", "MAX_STEPS_REACHED", "OBJECTIVE_REACHED_BY_ENEMY"}
-    assert len(sim.enemies) <= config["scenario_generation"]["max_enemies"]
+    # Classified entities from the classifier pipeline supplement base generation —
+    # cap check applies only to base-generated enemies.
+    base_enemies = [e for e in sim.enemies if e.classification_source != "classified"]
+    assert len(base_enemies) <= config["scenario_generation"]["max_enemies"]
 
 
 def test_builder_payload_schema_from_placed_entities():

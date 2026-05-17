@@ -34,3 +34,6 @@ class GuiControls:
                 self.show_paths = not self.show_paths
             elif event.key == pygame.K_s:
                 self.save_screenshot = True
+            elif event.key == pygame.K_b:
+                print("\nScenario Builder: python run_scenario_builder.py")
+                print("Classifier GUI:   python run_classifier_gui.py --mock\n")
