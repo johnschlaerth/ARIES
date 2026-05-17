@@ -1,4 +1,6 @@
 .venv/
+.env
+*.env
 __pycache__/
 *.pyc
 .pytest_cache/
@@ -7,5 +9,19 @@ outputs/classification_cache.json
 outputs/reports/*
 outputs/replays/*
 outputs/*.png
+scenarios/generated_latest.json
+scenarios/builder_scenario.json
+*.mp4
+*.mov
+*.heic
+*.tif
+*.tiff
+data/images/*
+!data/images/README_PLACE_IMAGES_HERE.txt
+!data/images/enemy_drone.jpg
+!data/images/enemy_ground_vehicle.jpg
+!data/images/friendly_soldier.jpg
+!data/images/puppy.jpg
+!data/images/random_object.jpg
 !outputs/reports/.gitkeep
 !outputs/replays/.gitkeep

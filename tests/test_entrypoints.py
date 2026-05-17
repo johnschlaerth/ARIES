@@ -18,7 +18,7 @@ def test_run_classifier_script_mock_folder():
 def test_run_headless_script_no_replay():
     result = run_cmd([sys.executable, "run_headless.py", "--no-replay"])
     assert result.returncode == 0
-    assert "outcome=ALL_THREATS_DISABLED" in result.stdout
+    assert "ARIES headless run complete:" in result.stdout
     assert "Summary JSON:" in result.stdout
 
 

@@ -6,6 +6,7 @@ from pathlib import Path
 from typing import Any
 
 from .models import Entity, Scenario
+from .scenario_generator import generate_scenario_payload, should_generate_scenario, write_generated_scenario
 from .utils import load_dotenv_if_present, load_json, project_root
 
 
@@ -56,4 +57,30 @@ def load_scenario(path: str | Path, config: dict[str, Any] | None = None) -> Sce
 def load_default_scenario(config: dict[str, Any] | None = None) -> Scenario:
     if config is None:
         config = load_config()
-    return load_scenario(config["paths"]["scenario_file"], config)
+    return load_or_generate_scenario(config)
+
+
+def load_or_generate_scenario(
+    config: dict[str, Any],
+    scenario_path: str | Path | None = None,
+    force_random: bool = False,
+    seed: int | None = None,
+) -> Scenario:
+    """Load a fixed scenario or generate one according to config/CLI intent."""
+
+    if scenario_path and not force_random:
+        return load_scenario(scenario_path, config)
+    if should_generate_scenario(config, force_random=force_random):
+        payload = generate_scenario_payload(config, seed=seed)
+        if config.get("scenario_generation", {}).get("write_generated_scenario", True):
+            write_generated_scenario(payload, config)
+        return Scenario(
+            scenario_name=payload["scenario_name"],
+            description=payload["description"],
+            map=payload["map"],
+            friendly_entities=[Entity.from_dict(e) for e in payload["friendly_entities"]],
+            enemy_entities=[Entity.from_dict(e) for e in payload["enemy_entities"]],
+            neutral_entities=[Entity.from_dict(e) for e in payload["neutral_entities"]],
+            image_assignments=payload.get("image_assignments", []),
+        )
+    return load_scenario(scenario_path or config["paths"]["scenario_file"], config)

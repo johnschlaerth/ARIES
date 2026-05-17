@@ -2,7 +2,9 @@
 
 from __future__ import annotations
 
-from aries.config_loader import load_config, load_default_scenario
+import argparse
+
+from aries.config_loader import load_config, load_or_generate_scenario
 from aries.gui_controls import GuiControls
 from aries.renderer import Renderer
 from aries.replay import save_replay
@@ -11,6 +13,12 @@ from aries.simulation import Simulation
 
 
 def main() -> None:
+    parser = argparse.ArgumentParser(description="Launch the ARIES MVP Pygame demo.")
+    parser.add_argument("--scenario", default=None, help="Use a fixed scenario JSON path.")
+    parser.add_argument("--random", action="store_true", help="Force random scenario generation.")
+    parser.add_argument("--seed", type=int, default=None, help="Seed for repeatable random scenario generation.")
+    args = parser.parse_args()
+
     try:
         import pygame
     except ImportError as exc:
@@ -21,7 +29,7 @@ def main() -> None:
         ) from exc
 
     config = load_config()
-    scenario = load_default_scenario(config)
+    scenario = load_or_generate_scenario(config, scenario_path=args.scenario, force_random=args.random, seed=args.seed)
     sim = Simulation(scenario, config)
     controls = GuiControls()
     renderer = Renderer(config, sim)

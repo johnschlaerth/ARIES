@@ -43,6 +43,7 @@ class Simulation:
             int(self.scenario.map["width"]),
             int(self.scenario.map["height"]),
             int(self.scenario.map.get("terrain_seed", sim_cfg.get("seed", 42))),
+            grid_size=int(config.get("scenario_generation", {}).get("terrain_grid_size", 120)),
         )
         self.state = SimulationState(paused=bool(sim_cfg.get("start_paused", True)))
         self.manager = BattleManager(

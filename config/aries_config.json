@@ -21,6 +21,22 @@
     "output_reports": true,
     "record_replay": true
   },
+  "scenario_generation": {
+    "enabled": true,
+    "mode": "random_on_run",
+    "seed": null,
+    "min_enemies": 5,
+    "max_enemies": 8,
+    "max_neutrals": 2,
+    "max_image_assignments": 3,
+    "map_width": 1000,
+    "map_height": 700,
+    "contour_count": 18,
+    "terrain_grid_size": 120,
+    "contour_dot_stride": 1,
+    "write_generated_scenario": true,
+    "generated_scenario_file": "scenarios/generated_latest.json"
+  },
   "display": {
     "width": 1400,
     "height": 900,
@@ -30,7 +46,8 @@
     "show_paths": true,
     "show_scores": true,
     "show_legend": true,
-    "show_event_log": true
+    "show_event_log": true,
+    "show_effect_ranges": true
   },
   "paths": {
     "scenario_file": "scenarios/demo_scenario.json",

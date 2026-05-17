@@ -27,7 +27,11 @@ class Renderer:
         self.small = pygame.font.SysFont("courier", 13)
         # Contours are static for a scenario, so compute them once instead of
         # scanning the elevation array every rendered frame.
-        self.terrain_contours = sim.terrain.contour_points(sim.scenario.map.get("contour_count", 12))
+        generation = config.get("scenario_generation", {})
+        self.terrain_contours = sim.terrain.contour_points(
+            sim.scenario.map.get("contour_count", generation.get("contour_count", 18)),
+            stride=int(generation.get("contour_dot_stride", 1)),
+        )
         self.colors = {
             "black": (0, 0, 0),
             "green": (0, 220, 80),

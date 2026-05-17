@@ -60,20 +60,21 @@ class Terrain:
         x, y = self.grid_index(point)
         return float(self.cost[y, x])
 
-    def contour_points(self, bands: int = 10) -> list[list[list[float]]]:
+    def contour_points(self, bands: int = 10, stride: int = 1) -> list[list[list[float]]]:
         """Return approximate contour point clouds for the renderer.
 
         Pygame draws these as small dim points. It is intentionally simple and
         robust; exact isoline extraction is unnecessary for the demo.
         """
 
-        levels = np.linspace(0.1, 0.95, bands)
+        levels = np.linspace(0.08, 0.96, bands)
         contours: list[list[list[float]]] = []
         for level in levels:
-            mask = np.abs(self.elevation - level) < 0.015
+            mask = np.abs(self.elevation - level) < 0.018
             points = []
             ys, xs = np.where(mask)
-            for y, x in zip(ys[::2], xs[::2]):
+            stride = max(1, int(stride))
+            for y, x in zip(ys[::stride], xs[::stride]):
                 points.append(self.world_point((int(x), int(y))))
             contours.append(points)
         return contours

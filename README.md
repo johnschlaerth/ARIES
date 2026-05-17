@@ -19,6 +19,8 @@ python run_demo.py
 
 Mock mode is the default and requires no network connection or API key.
 
+By default, the simulator generates a fresh sensible scenario each run. Friendly ARIES nodes start on the left side of the map, enemies start on the right side, and enemy count is capped so the demo does not create a large batch of image/API work.
+
 If `python3.11` is not available, Python 3.12 is also a good target. Avoid Python versions newer than the packages support; Pygame may not have wheels for very new interpreters.
 
 For headless validation without Pygame, install the smaller dependency set:
@@ -154,7 +156,7 @@ Start with the headless path if anything about Pygame or your Python version is 
    python run_demo.py
    ```
 
-   The default scenario is paced for visual inspection: it should run long enough to watch assignments, movement, ISR classification, abstract effects, and disabled X markers before the mission report is written.
+   The default run uses a newly generated scenario unless config disables random generation or you pass `--scenario`.
 
    The GUI starts paused by default. Press `SPACE` to run, `N` to step once, and `Q` or `ESC` to quit.
 
@@ -163,6 +165,32 @@ Start with the headless path if anything about Pygame or your Python version is 
 - `mock`: deterministic offline mode using `data/mock_classifications.json`.
 - `api`: optional OpenAI vision classification. It compresses images, validates JSON, caches results, and falls back safely.
 - `replay`: loads saved replay frames from `outputs/replays/`.
+
+## Scenario Generation
+
+Random scenario generation is controlled by `config/aries_config.json` under `scenario_generation`.
+
+Defaults:
+
+- random generation enabled
+- 5 required friendly ARIES nodes
+- 5 to 8 enemy/unknown entities
+- at most 2 neutral/non-threat entities
+- at most 3 image assignments
+- friendlies spawn on the left side
+- enemies spawn on the right side
+- the latest generated scenario is written to `scenarios/generated_latest.json`
+
+Useful commands:
+
+```bash
+python run_headless.py --random --no-replay
+python run_headless.py --random --seed 123 --no-replay
+python run_demo.py --random --seed 123
+python run_demo.py --scenario scenarios/demo_scenario.json
+```
+
+Use `--seed` when you want a repeatable random setup for recording or debugging.
 
 To try API classification:
 
@@ -194,6 +222,8 @@ The `data/images/` folder includes simple placeholder JPEGs:
 - `random_object.jpg`
 
 These are intentionally not AI-generated. They exist so the mock classifier, API plumbing, image compression, caching, and GUI visual testbench can run immediately. Replace or add real local images when you want meaningful API classification.
+
+User-provided image/media files and `.env` are ignored by `.gitignore` so API keys and large local assets are not accidentally committed.
 
 ## Controls
 
@@ -296,6 +326,12 @@ Scenario builder controls:
 - mouse click: place selected entity
 - `S`: save to `scenarios/builder_scenario.json`
 - `ESC`: quit
+
+The builder saves a normal scenario JSON file. Use it with:
+
+```bash
+python run_demo.py --scenario scenarios/builder_scenario.json
+```
 
 ## Tests
 

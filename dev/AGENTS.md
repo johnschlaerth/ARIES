@@ -33,12 +33,14 @@ All project work belongs under `MVP/aries_mvp/`. Do not modify files in the pare
 - `aries/report_writer.py`: mission reports.
 - `aries/replay.py`: replay frame persistence.
 - `aries/scenario_builder.py`: simple Pygame scenario authoring tool.
+- `aries/scenario_generator.py`: random but side-separated scenario generation.
 - `aries/visual_testbench.py`: classifier and simulation GUI confidence checks.
 - `aries/self_check.py`: reusable non-GUI readiness check.
 
 ## Development Rules
 
 - Mock mode must remain the most reliable path.
+- Random scenario generation must keep friendlies on the left, enemies on the right, and enemy counts capped.
 - Tests must not require an API key or Pygame display.
 - Headless mission execution must keep working without pandas or Pygame imports.
 - `requirements-headless.txt` must remain enough for tests, classifier mock/API plumbing, reports, and `run_headless.py`.

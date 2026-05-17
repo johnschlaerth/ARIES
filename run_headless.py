@@ -13,6 +13,8 @@ from aries.simulation import Simulation
 def main() -> None:
     parser = argparse.ArgumentParser(description="Run ARIES simulation headlessly and write reports.")
     parser.add_argument("--scenario", default=None, help="Scenario JSON path relative to project root or absolute path.")
+    parser.add_argument("--random", action="store_true", help="Force random scenario generation.")
+    parser.add_argument("--seed", type=int, default=None, help="Seed for repeatable random scenario generation.")
     parser.add_argument("--max-steps", type=int, default=None, help="Override maximum simulation steps for this run.")
     parser.add_argument("--no-replay", action="store_true", help="Skip replay JSON export.")
     args = parser.parse_args()
@@ -22,8 +24,10 @@ def main() -> None:
         config["simulation"]["max_steps"] = args.max_steps
     if args.no_replay:
         config["simulation"]["record_replay"] = False
-    scenario_path = args.scenario or config["paths"]["scenario_file"]
-    scenario = load_scenario(scenario_path, config)
+    from aries.config_loader import load_or_generate_scenario
+
+    scenario_path = args.scenario or None
+    scenario = load_or_generate_scenario(config, scenario_path=scenario_path, force_random=args.random, seed=args.seed)
     sim = Simulation(scenario, config)
     while not sim.state.mission_done:
         sim.step()

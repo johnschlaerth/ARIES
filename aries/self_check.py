@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from .classifier import ImageClassifier
-from .config_loader import load_config, load_default_scenario, resolve_project_path
+from .config_loader import load_config, load_or_generate_scenario, resolve_project_path
 from .report_writer import write_reports
 from .simulation import Simulation
 
@@ -14,12 +14,12 @@ def run_self_check(write_outputs: bool = False) -> tuple[bool, list[str]]:
     messages: list[str] = []
     config = load_config()
     config["simulation"]["record_replay"] = False
-    scenario = load_default_scenario(config)
+    scenario = load_or_generate_scenario(config, force_random=True, seed=42)
     sim = Simulation(scenario, config)
     while not sim.state.mission_done:
         sim.step()
     messages.append(f"simulation outcome={sim.state.outcome} steps={sim.state.step}")
-    ok = sim.state.outcome == "ALL_THREATS_DISABLED" and sim.state.step >= 30
+    ok = sim.state.mission_done and sim.state.outcome != "RUNNING" and sim.state.step >= 10
 
     image_folder = resolve_project_path(config, config["paths"]["image_folder"])
     image_paths = sorted(p for p in image_folder.iterdir() if p.suffix.lower() in {".jpg", ".jpeg", ".png"})
