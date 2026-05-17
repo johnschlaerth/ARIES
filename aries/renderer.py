@@ -157,13 +157,26 @@ class Renderer:
             pygame.draw.circle(self.screen, color, (x, y), 6, 1)
         if show_vector and entity.velocity != [0.0, 0.0]:
             pygame.draw.line(self.screen, self.colors["white"], (x, y), (int(x + entity.velocity[0] * 2), int(y + entity.velocity[1] * 2)), 1)
-        self.draw_text(entity.id, (x + 10, y - 7), "white", self.small)
+        # Show health bar under damaged friendlies
+        if entity.allegiance == "friendly" and entity.health < 100:
+            bar_w = 22
+            filled = max(1, int(bar_w * entity.health / 100))
+            bar_color = (230, 80, 30) if entity.health < 35 else (220, 160, 30) if entity.health < 65 else (0, 200, 60)
+            pygame.draw.rect(self.screen, (40, 40, 40), (x - bar_w // 2, y + 10, bar_w, 4))
+            pygame.draw.rect(self.screen, bar_color, (x - bar_w // 2, y + 10, filled, 4))
+        label = entity.id if entity.health >= 100 or entity.allegiance != "friendly" else f"{entity.id} {int(entity.health)}%"
+        self.draw_text(label, (x + 10, y - 7), "white", self.small)
 
     def _entity_color(self, entity: Entity) -> tuple[int, int, int]:
         if entity.allegiance == "enemy":
             return self.colors["red"]
         if entity.allegiance == "neutral":
             return self.colors["white"]
+        # Friendly units shift toward orange/red as health drops
+        if entity.health < 35:
+            return (230, 80, 30)   # critical — orange-red
+        if entity.health < 65:
+            return (220, 160, 30)  # damaged — amber
         if entity.payload_type == "comms":
             return self.colors["blue"]
         if entity.payload_type == "ew":

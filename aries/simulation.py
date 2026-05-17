@@ -7,7 +7,7 @@ import random
 from dataclasses import dataclass, field
 
 from .battle_manager import BattleManager
-from .effects import apply_effects, update_cooldowns
+from .effects import apply_effects, apply_enemy_counterfire, update_cooldowns
 from .local_agent import LocalAgent
 from .models import Entity, Event, Scenario
 from .pathfinding import astar_path, direct_path
@@ -195,6 +195,7 @@ class Simulation:
         self._move_friendlies()
         self._move_enemies()
         self.state.events.extend(apply_effects(self.friendlies, self.enemies, self.rng, self.state.step))
+        self.state.events.extend(apply_enemy_counterfire(self.friendlies, self.enemies, self.rng, self.state.step))
         update_cooldowns(self.all_entities)
         self._check_end_conditions()
         if self.record_replay:

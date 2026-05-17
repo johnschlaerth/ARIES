@@ -80,6 +80,46 @@ def apply_effects(friendlies: list[Entity], enemies: list[Entity], rng: random.R
     return events
 
 
+def apply_enemy_counterfire(friendlies: list[Entity], enemies: list[Entity], rng: random.Random, step: int) -> list[Event]:
+    """Enemies engage friendly units that come within their attack range."""
+    events: list[Event] = []
+    for attacker in enemies:
+        if not attacker.active or attacker.effect_range <= 0:
+            continue
+        if attacker.effect_cooldown_remaining > 0:
+            continue
+
+        in_range = [f for f in friendlies if f.active and distance(attacker.position, f.position) <= attacker.effect_range]
+        if not in_range:
+            continue
+
+        if attacker.entity_type == "enemy_ew":
+            # EW enemies jam/suppress all friendlies in range rather than killing them
+            for target in in_range:
+                if target.suppressed_steps < 6:
+                    target.suppressed_steps = 6
+                    target.status_text = "JAMMED"
+                    events.append(Event(step, "friendly_jammed", f"{attacker.name} jammed {target.name}", attacker.id, target.id))
+            attacker.effect_cooldown_remaining = attacker.effect_cooldown_steps
+            continue
+
+        # All other enemies attempt to hit one random friendly in range
+        target = rng.choice(in_range)
+        attacker.effect_cooldown_remaining = attacker.effect_cooldown_steps
+        if rng.random() <= attacker.effect_probability:
+            damage = float(attacker.threat_level * 3)
+            target.health = max(0.0, target.health - damage)
+            if target.health <= 0.0:
+                target.alive = False
+                target.disabled = True
+                target.status_text = "X"
+                events.append(Event(step, "friendly_lost", f"{attacker.name} eliminated {target.name}", attacker.id, target.id))
+            else:
+                target.status_text = f"DMG {int(target.health)}%"
+                events.append(Event(step, "friendly_hit", f"{attacker.name} hit {target.name} ({int(target.health)}% HP)", attacker.id, target.id))
+    return events
+
+
 def update_cooldowns(entities: list[Entity]) -> None:
     for entity in entities:
         if entity.effect_cooldown_remaining > 0:

@@ -178,7 +178,9 @@ def _enemy(
         "speed": round(speed, 2),
         "threat_level": threat,
         "confidence": confidence if confidence is not None else round(rng.uniform(0.78, 0.94), 2),
-        "effect_range": 180 if entity_type == "enemy_ew" else 80,
+        "effect_range": 180 if entity_type == "enemy_ew" else 110 if entity_type == "enemy_drone" else 90,
+        "effect_probability": 0.22 if entity_type == "enemy_drone" else 0.15 if entity_type == "enemy_ew" else 0.18,
+        "effect_cooldown_steps": 4 if entity_type == "enemy_drone" else 8 if entity_type == "enemy_ew" else 5,
     }
 
 
@@ -239,6 +241,10 @@ def _inject_classified_entities(
             })
             continue
 
+        # Spawn enemy/unknown entities on the far right of the map, matching where
+        # regular enemies spawn (0.90-0.98). Objective sits at ~0.74*width, so
+        # starting at 0.88+ guarantees >140 units separation and prevents
+        # immediate OBJECTIVE_REACHED_BY_ENEMY on step 1.
         entity_dict: dict[str, Any] = {
             "id": entry.get("entity_id", f"CLS_{rng.randint(100, 999)}"),
             "name": cls.get("name", "Classified Entity")[:32],
@@ -246,8 +252,8 @@ def _inject_classified_entities(
             "domain": domain,
             "entity_type": entity_type,
             "position": [
-                round(rng.uniform(width * 0.65, width * 0.95), 1),
-                round(rng.uniform(height * 0.10, height * 0.90), 1),
+                round(rng.uniform(width * 0.88, width * 0.97), 1),
+                round(rng.uniform(height * 0.08, height * 0.92), 1),
             ],
             "speed": 3.0 if domain == "air" else 2.0,
             "threat_level": int(cls.get("threat_level", 3)),
