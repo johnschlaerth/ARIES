@@ -1,0 +1,743 @@
+ARIES SYSTEM DESCRIPTION
+Automated Robotic Integrated Effects System
+LHXelerator Disruption Challenge #4 Foundation Document
+Working Version: Quest 2 / MVP Definition
+
+1. EXECUTIVE SUMMARY
+
+ARIES, the Automated Robotic Integrated Effects System, is a near-term robotic ground effects concept that combines venture-partner vehicle autonomy with L3Harris communications, spectrum dominance, ISR, counter-UAS, C2, and modular effects technologies.
+
+The core concept is simple: take reasonably low-cost vehicles, retrofit them into teleoperated or autonomy-ready robotic ground platforms using Polymath Robotics, then integrate L3Harris mission systems and selected payload modules to create attritable ground nodes that can sense, relay, jam, defend, deliver effects, and support human operators in dangerous terrain without exposing personnel.
+
+ARIES is not a new vehicle prime program. It is an integration and orchestration layer. The value proposition is that L3Harris can use venture-partner mobility to extend existing L3Harris capabilities into tactical ground positions that would otherwise require exposed personnel, expensive manned vehicles, or slow bespoke platform development.
+
+Primary venture partner:
+Polymath Robotics
+
+Secondary payload partner:
+Allen Control Systems
+
+Primary L3Harris focus:
+Communications and Spectrum Dominance
+
+Secondary L3Harris focus:
+Space and Mission Systems / ISR / C2 / launched effects / Missile Solutions roadmap
+
+Primary demonstration target:
+A local software MVP that simulates AI-assisted tasking of robotic ground effects nodes in a synthetic battlespace. The software shows target classification, priority scoring, terrain-aware movement, effect assignment, tactical visualization, and mission outcome reporting. The MVP does not connect to real hardware, does not control weapons, and does not model classified capabilities. It demonstrates the decision-support and orchestration logic that would assist teleoperators or future supervised autonomy.
+
+2. THE CORE THESIS
+
+Modern battlefields increasingly require distributed, mobile, attritable, and rapidly reconfigurable systems. Ukraine has shown that low-cost robotic and unmanned systems can generate outsized tactical effects, especially when paired with sensing, networking, electronic warfare, and precision effects.
+
+L3Harris already has the critical mission systems:
+- Tactical radios
+- Resilient mesh networking
+- Anti-jam waveforms
+- AI-enabled spectrum sensing
+- EO/IR payloads
+- Full-motion video relays
+- Counter-UAS kits
+- C2 software
+- Launched effects
+- Missile Solutions / propulsion expertise
+
+What L3Harris does not need to become is a vehicle prime. ARIES solves that by using Polymath Robotics as the autonomy and vehicle retrofit layer. Polymath provides the robotic ground mobility substrate. L3Harris provides the mission systems, communications backbone, effects integration, and AI orchestration layer.
+
+The result is a low-cost, vehicle-agnostic, modular robotic effects node that can be fielded faster than a purpose-built unmanned ground combat vehicle and can be adapted to multiple customer missions.
+
+3. THE ONE-SENTENCE VERSION
+
+ARIES turns low-cost vehicle platforms into teleoperated or autonomy-ready robotic ground effects nodes by combining Polymath Robotics vehicle automation with L3Harris tactical communications, spectrum dominance, ISR, C-UAS, C2, and modular payload capabilities.
+
+4. STRONG REVIEWER-FACING VERSION
+
+ARIES is a near-term, modular robotic ground effects architecture that gives L3Harris a rapid path to field attritable, vehicle-agnostic tactical nodes for contested communications, electronic warfare, ISR relay, counter-UAS, and future launched effects. By using Polymath Robotics to retrofit existing vehicles and L3Harris systems to provide resilient communications, sensing, C2, and payload integration, ARIES allows the company to extend existing mission systems into dangerous tactical positions while reducing risk to personnel and avoiding the cost and schedule burden of becoming a vehicle prime.
+
+5. PROBLEM STATEMENT
+
+Ground forces increasingly need to project sensing, communications, electronic warfare, counter-UAS, and precision effects into high-risk zones. Today, that often requires one or more undesirable choices:
+- Expose personnel to danger
+- Use expensive tactical vehicles for dangerous forward missions
+- Deploy dismounted teams into areas with drone, artillery, mine, EW, and ambush risk
+- Build bespoke robotic vehicles with long development timelines
+- Treat radios, sensors, jammers, turrets, and launched effects as isolated systems rather than coordinated distributed nodes
+
+At the same time, the tactical environment is shifting:
+- Drones and small unmanned systems are becoming cheaper, more numerous, and harder to detect early
+- RF environments are increasingly contested and congested
+- Static defensive systems are vulnerable
+- Manned logistics and forward positioning are expensive and dangerous
+- Customers need faster fielding paths, not exquisite bespoke platforms
+
+ARIES addresses this problem by creating an attritable, modular ground platform architecture that can carry, position, and coordinate L3Harris mission effects without requiring a human operator to occupy the danger zone.
+
+6. SOLUTION OVERVIEW
+
+ARIES consists of six layers:
+
+Layer 1: Vehicle Mobility Layer
+- Low-cost vehicle platform
+- Preferably pickup truck, small utility vehicle, off-road vehicle, or other vehicle suitable for retrofit
+- Converted using Polymath Robotics drive-by-wire, autonomy, and teleoperation capability
+- Designed to support teleoperation first and supervised autonomy later
+
+Layer 2: Tactical Communications Layer
+- L3Harris tactical radio integration
+- Mesh networking / MANET support
+- Anti-jam waveform support
+- Vehicle-to-vehicle, vehicle-to-operator, and vehicle-to-C2 links
+- Position/location/status reporting
+
+Layer 3: Sensing / ISR Layer
+- EO/IR sensor options
+- Vehicle-mounted camera options
+- Optional WESCAM-style ISR payload concept
+- Full-motion video relay options
+- Data feeds for AI classification and common operational picture updates
+
+Layer 4: Effects Payload Layer
+- EW / spectrum payload module
+- C-UAS payload module
+- ISR relay payload module
+- Communications relay payload module
+- Expendable close-effect payload module, represented abstractly in the MVP
+- Launched effects module, represented conceptually for future roadmap
+- Modular power, mounting, and data interface concept
+
+Layer 5: AI Mission-Orchestration Layer
+- Image-based object classification
+- Threat / priority scoring
+- Central battle manager scoring
+- Local vehicle-level target/effect selection logic
+- Terrain-aware routing in the synthetic simulation
+- Effect assignment and mission outcome reporting
+- Operator decision-support outputs
+
+Layer 6: C2 / Operator Interface Layer
+- Human teleoperator interface
+- Tactical map view
+- Unit status
+- Priority list
+- Recommended assignments
+- Event log
+- Mission report
+- Future integration path into L3Harris hC2 / tactical C2 ecosystem
+
+7. WHAT ARIES IS
+
+ARIES is:
+- A modular architecture for robotic ground effects nodes
+- A way to extend L3Harris communications and spectrum dominance products onto attritable robotic ground platforms
+- A near-term integration concept using venture-partner vehicle autonomy
+- A software-assisted mission-planning and teleoperator decision-support system
+- A platform for distributed sensing, relay, EW, C-UAS, and future effect modules
+- A transitionable 1-to-3-year concept if scoped properly
+
+8. WHAT ARIES IS NOT
+
+ARIES is not:
+- A new tank
+- A new vehicle prime program
+- A fully autonomous lethal fire-control system
+- A detailed weapon design
+- A replacement for all human judgment
+- A classified performance model
+- A bespoke hardware platform that requires L3Harris to own every subsystem
+- A science project with no transition path
+
+9. CORE VALUE PROPOSITION
+
+ARIES gives L3Harris a way to turn existing and emerging mission systems into mobile, distributed, attritable ground effects nodes.
+
+The value is not the car itself. The value is the ability to rapidly reposition L3Harris effects:
+- Communications relay
+- Mesh networking
+- Electronic warfare
+- Counter-UAS sensing / response
+- ISR collection
+- Full-motion video relay
+- Launched effects support
+- Tactical decoy / deception
+- Remote presence
+- Forward operating node support
+
+The system reduces risk to personnel, increases tactical dispersion, improves coverage of dangerous areas, and creates a modular architecture for future payload insertion.
+
+10. WHY THIS FITS L3HARRIS
+
+ARIES fits L3Harris because it is a mission-system integration concept, not a vehicle manufacturing concept.
+
+The L3Harris role is:
+- Provide resilient tactical networking
+- Provide spectrum dominance capability
+- Provide sensing and ISR integration
+- Provide C2 integration
+- Provide modular effects integration
+- Provide AI-enabled mission orchestration
+- Provide systems engineering, transition planning, and customer alignment
+
+The venture partner role is:
+- Provide robotic vehicle retrofit
+- Provide autonomy / teleoperation platform
+- Reduce vehicle development burden
+- Allow faster prototyping and field experimentation
+
+This division of labor is strategically important. It allows L3Harris to extend core product lines without becoming a vehicle prime.
+
+11. PRIMARY CUSTOMER ALIGNMENT
+
+Primary customer problem:
+Ground forces need to sense, communicate, defend, jam, and deliver effects in dangerous forward areas without exposing personnel.
+
+ARIES customer benefits:
+- Reduces risk to ground troops
+- Enables danger-close support without human exposure
+- Provides mobile C-UAS support
+- Provides forward EW / spectrum effects
+- Extends mesh network coverage
+- Creates mobile ISR / relay nodes
+- Allows low-cost vehicles to carry high-value mission systems
+- Supports distributed operations
+- Improves survivability by dispersing mission systems
+- Provides a near-term path to robotic battlefield support using available vehicle platforms
+
+12. REVIEWER-FACING TECHNICAL NARRATIVE
+
+The technical core of ARIES is not the vehicle. The technical core is distributed effect orchestration over a resilient tactical network.
+
+A fleet of robotic ground nodes is treated as a dynamic graph:
+- Each node has a position
+- Each node has a velocity
+- Each node has a payload type
+- Each node has an effect radius
+- Each node has a communications state
+- Each node has a health state
+- Each node has mission utility
+- Each threat has a classification
+- Each threat has a confidence level
+- Each threat has a priority score
+- Each threat has a proximity relation to friendly nodes
+- Terrain modifies mobility and line-of-sight assumptions
+
+The ARIES battle manager computes global tasking recommendations. Each node also computes local recommended behavior based on proximity, threat level, payload match, terrain, and survivability. The result is a visible prioritization and routing system that can support teleoperators or serve as a future supervised autonomy layer.
+
+13. VENTURE PARTNER INCORPORATION
+
+13.1 Polymath Robotics
+
+Polymath Robotics is the primary venture partner. Its role is to enable vehicle-agnostic robotic conversion of existing or low-cost ground vehicles. In the ARIES concept, Polymath provides the mobility substrate:
+- Retrofit path for off-road or utility vehicles
+- Drive-by-wire / actuation integration
+- Teleoperation path
+- Autonomy-ready path
+- Remote bringup / diagnostics concept
+- Sensor and compute integration flexibility
+- Ability to use existing vehicle assets rather than requiring a new L3Harris vehicle
+
+ARIES uses Polymath because it allows L3Harris to focus on what it does best: mission systems, communications, spectrum, sensing, C2, and integration.
+
+13.2 Allen Control Systems
+
+Allen Control Systems is a secondary payload partner. Its Bullfrog C-UAS system provides a clear counter-drone payload module for ARIES:
+- Vehicle-mounted C-UAS defense
+- Passive / sensor-based detection options
+- Autonomous or semi-autonomous detection and tracking capability
+- Human-authorized engagement concept for real-world deployment
+- Strong fit with mobile ground defense, high-value asset protection, and forward-position defense
+
+In the polished concept, ACS is framed as an optional payload partner rather than the primary venture partner. The official venture partner story remains Polymath Robotics.
+
+14. L3HARRIS INTEGRATION MENU
+
+The following L3Harris systems should be presented as modular options for ARIES. The concept does not require every system on every vehicle. ARIES is a family-of-systems architecture where payloads can be selected based on mission.
+
+14.1 Tactical Radio / Mesh Network Node
+
+Candidate systems:
+- AN/PRC-171 / RF-9820S Compact Team Radio
+- RF-9820S-ER Embeddable Modular Radio
+- AN/PRC-163 / AN/PRC-167 interoperability path
+- RF-9800W / RF-9800W-E for higher-capacity vehicular networking
+- Wraith waveform / Wraith Shield concept
+
+Role in ARIES:
+- Robotic vehicle control link
+- Vehicle-to-vehicle MANET
+- Position location information
+- Data relay
+- Operator connectivity
+- Sensor data relay
+- Network extension into terrain where humans should not be positioned
+
+14.2 Wraith Shield / AI-Enabled Spectrum Layer
+
+Candidate system:
+- Wraith Shield
+
+Role in ARIES:
+- Convert radios into distributed RF sensing nodes
+- Support C-UAS detection / classification concepts
+- Provide spectrum-awareness layer
+- Allow mobile robotic nodes to extend sensing geometry
+- Increase coverage by moving sensors into useful terrain positions
+
+14.3 Electronic Warfare / Spectrum Payload
+
+Candidate systems:
+- Wraith Shield defensive jammer concept
+- L3Harris EW / spectrum dominance payloads where appropriate
+- Green Wolf as future launched EW effect
+
+Role in ARIES:
+- Mobile EW node
+- Spectrum denial / disruption concept
+- RF sensing and reporting
+- Forward-deployed jamming / decoy / deception concept
+- Non-kinetic effect assignment in the MVP
+
+MVP representation:
+- EW vehicle is represented by a circle symbol
+- EW effect suppresses or degrades enemy entities within an abstract radius
+- EW effectiveness is represented as reduced enemy movement, reduced threat score, or disabled drone behavior in the simulation
+- No real jamming parameters are modeled
+
+14.4 ISR / EO-IR Payload
+
+Candidate systems:
+- WESCAM MX-10 RSTA
+- WESCAM MX-Series
+- Vehicle camera systems
+- ROVER relay options
+
+Role in ARIES:
+- Ground ISR node
+- Tactical surveillance
+- Threat observation
+- Target recognition support
+- Video relay into C2
+- Remote overwatch from unmanned ground position
+
+MVP representation:
+- ISR vehicle is represented by a sensor symbol
+- ISR increases classification confidence
+- ISR can reveal unknown entities
+- ISR improves priority scoring through better confidence
+
+14.5 Full-Motion Video / Relay Payload
+
+Candidate system:
+- ROVER 6Si / ROVER 6-series
+
+Role in ARIES:
+- Real-time video relay
+- Convoy overwatch support
+- Situational awareness relay
+- Tactical data forwarding
+- Remote operator support
+
+MVP representation:
+- Relay vehicle extends friendly network radius
+- Relay vehicle improves command connectivity
+- Relay vehicle increases confidence of nearby friendly units
+
+14.6 Counter-UAS Payload
+
+Candidate systems:
+- Allen Control Systems Bullfrog
+- L3Harris VAMPIRE
+- WESCAM + C-UAS integration
+- Wraith Shield for RF sensing / AI-enabled detection
+
+Role in ARIES:
+- Mobile drone defense
+- High-value asset protection
+- Forward C-UAS screen
+- Defense of robotic convoy or dispersed ground node cluster
+
+MVP representation:
+- C-UAS vehicle is represented by a turret symbol
+- Enemy drones are red downward triangles
+- C-UAS effects have range, cooldown, probability of success, and limited capacity
+- Engagement logic is abstract and synthetic only
+
+14.7 Vehicle-Agnostic Precision Effects Payload
+
+Candidate system:
+- VAMPIRE as the closest public vehicle-agnostic L3Harris effect system
+- APKWS / laser-guided munition concept as public reference
+- WESCAM MX-10D RSTA as a paired sensing element
+- L3Harris proximity fuze / C-UAS relevance where appropriate
+
+Role in ARIES:
+- Demonstrates that L3Harris already has a vehicle-agnostic payload philosophy
+- Provides direct bridge from existing vehicle kit to future robotic vehicle kit
+- Supports near-term customer credibility
+
+MVP representation:
+- Precision effect vehicle is represented as a square or crosshair symbol
+- Effect is abstracted as “precision effect available”
+- No munition details, launch profiles, or fire-control parameters are modeled
+
+14.8 Launched Effects Payload
+
+Candidate systems:
+- Red Wolf
+- Green Wolf
+
+Role in ARIES:
+- Future growth path
+- Long-range kinetic / EW effect family
+- Ground-launch or vehicle-launch conceptual option
+- Demonstrates modularity beyond local effects
+
+MVP representation:
+- Not required in MVP
+- Can be shown as future roadmap module
+- If represented, it should be an abstract “standoff effect” with large range and limited availability
+
+14.9 Aerojet Rocketdyne / Missile Solutions Roadmap
+
+Candidate systems / relevance:
+- Solid rocket motors
+- THAAD boost motor and DACS as proof of propulsion excellence
+- Standard Missile propulsion support
+- Glide Phase Interceptor propulsion support
+- L3Harris Missile Solutions organization
+
+Important framing:
+Do not claim that a THAAD, PAC-3, Standard Missile, or other strategic/interceptor-class system should be mounted on ARIES. That would sound unserious. Instead, frame Aerojet Rocketdyne / Missile Solutions as a future effects and propulsion ecosystem that can inform future modular launched-effect payloads.
+
+Best wording:
+“ARIES provides a robotic ground mobility and C2 layer that could support future L3Harris Missile Solutions and launched-effects integration. For the near-term concept, the public, vehicle-relevant reference is VAMPIRE/APKWS-style vehicle-agnostic effects. For the longer-term roadmap, L3Harris Missile Solutions and Aerojet Rocketdyne propulsion expertise provide a path toward purpose-built standoff or defensive effect modules.”
+
+15. RECOMMENDED PAYLOAD FAMILY FOR ARIES
+
+For the presentation, simplify payloads into six core categories:
+
+1. ARIES-COMMS
+Robotic communications relay / MANET extension vehicle
+
+2. ARIES-EW
+Robotic electronic warfare / spectrum sensing / non-kinetic effect vehicle
+
+3. ARIES-ISR
+Robotic ISR / EO-IR / full-motion video relay vehicle
+
+4. ARIES-CUAS
+Robotic counter-UAS vehicle using ACS Bullfrog, VAMPIRE-like payloads, Wraith Shield sensing, or related C-UAS effects
+
+5. ARIES-EFFECT
+Robotic close-effect / precision-effect payload carrier, represented abstractly for demo purposes
+
+6. ARIES-LAUNCHED
+Future standoff launched-effect vehicle using Red Wolf / Green Wolf / future Missile Solutions effect concepts
+
+The MVP should only simulate the following categories:
+- COMMS / relay
+- EW
+- ISR
+- C-UAS
+- EFFECT
+
+The MVP should not attempt to simulate real missile flight, real jamming, real target engagement, or real vehicle control.
+
+16. CONOPS
+
+16.1 Baseline Mission
+
+A small team needs to defend or hold a contested area with reduced personnel exposure. The area includes enemy drones, enemy ground units, possible EW nodes, and unknown contacts. Human operators cannot safely occupy several forward positions.
+
+The ARIES system deploys several robotic ground vehicles:
+- One communications relay node
+- One EW / spectrum node
+- One ISR node
+- One C-UAS node
+- One expendable close-effect node
+
+The vehicles are teleoperated or supervised by operators. The ARIES mission software ingests entity data, image classifications, simulated sensor reports, terrain data, and vehicle status. It then recommends which vehicles should move, which threats should be prioritized, and which effect category should be assigned.
+
+16.2 Step-by-Step Operational Flow
+
+Step 1:
+Operator loads mission configuration.
+
+Step 2:
+ARIES displays synthetic battlefield map with terrain contours, friendly robotic nodes, enemy entities, unknown contacts, and mission objective.
+
+Step 3:
+Image classification module processes photos from an image folder and assigns each image:
+- entity name
+- category
+- allegiance
+- threat level 1-10
+- description
+- confidence
+- rationale
+- recommended simulation class
+
+Step 4:
+Simulation initializes friendly and enemy entities.
+
+Step 5:
+Central battle manager computes global priorities:
+- highest threat
+- closest threat to defended asset
+- highest mobility threat
+- threat to network node
+- payload match score
+- terrain accessibility
+- friendly survivability
+
+Step 6:
+Each friendly robotic vehicle computes local priority:
+- closest relevant threat
+- payload compatibility
+- path cost
+- risk of loss
+- support value to other friendly units
+
+Step 7:
+Simulation advances in fixed timesteps.
+
+Step 8:
+Friendly nodes move according to terrain-aware route recommendations.
+
+Step 9:
+Enemy nodes move according to simple behavior models:
+- drones fly straight or near-straight toward objective / defended asset
+- ground threats move through lower-cost terrain
+- EW threats remain mostly stationary or move slowly
+- unknowns may become classified after ISR exposure
+
+Step 10:
+Effects are resolved abstractly:
+- EW suppresses
+- C-UAS neutralizes drones
+- effect vehicles neutralize ground threats
+- relay vehicles improve command/network range
+- ISR vehicles improve classification confidence
+
+Step 11:
+Killed / disabled entities remain on-screen as X marks.
+
+Step 12:
+Mission report is generated:
+- threats neutralized
+- friendlies lost
+- objective status
+- network coverage score
+- average response time
+- recommended assignments
+- final entity table
+- event log
+
+17. MVP DEMONSTRATION TARGET
+
+The Quest 2 MVP should be intentionally narrow:
+
+“Demonstrate a local Python simulation in which AI-classified entities are placed into a synthetic contour-map battlespace, scored by a central ARIES battle manager and local vehicle-level decision logic, then visualized in a 1980s-style tactical display as robotic ground nodes move, prioritize threats, apply abstract effects, and generate a mission outcome report.”
+
+This is the demonstration target because it directly answers prior feedback:
+- It narrows the broad concept into a specific prototype
+- It focuses on the AI planning layer
+- It shows real software working
+- It avoids dependency on hardware procurement
+- It demonstrates incremental transition path
+- It makes the concept technically legible to senior fellows
+
+18. HOW ARIES ADDRESSES THE GRADING RUBRIC
+
+18.1 Strategic Alignment
+
+Score target: 9/10
+
+Justification:
+ARIES extends L3Harris core mission areas: tactical communications, resilient networking, spectrum dominance, C-UAS, ISR, C2, and modular effects. It creates a transition path for existing product lines onto robotic ground platforms without requiring L3Harris to become a vehicle prime.
+
+Key message:
+“ARIES is a robotic ground carrier for L3Harris mission systems.”
+
+18.2 Technology Alignment
+
+Score target: 9/10
+
+Justification:
+The concept uses existing L3Harris technologies and product families, including radios, MANET waveforms, Wraith Shield, RF-9800W/CAMAN, WESCAM, ROVER, VAMPIRE, hC2, Red Wolf, Green Wolf, and Missile Solutions roadmap capabilities. The software MVP shows AI classification and mission-effect orchestration rather than vague AI branding.
+
+Key message:
+“ARIES turns current L3Harris technologies into a distributed robotic effects architecture.”
+
+18.3 Customer Relevance
+
+Score target: 9/10
+
+Justification:
+Customers need to reduce personnel exposure, defeat UAS threats, preserve communications under contested conditions, and disperse tactical capabilities. ARIES supports Ukraine-relevant battlefield lessons and Army modernization priorities by enabling low-cost, modular, robotic systems that can support or replace exposed personnel in dangerous ground positions.
+
+Key message:
+“ARIES lets operators project effects into the danger zone without putting humans there.”
+
+18.4 Differentiation
+
+Score target: 8/10
+
+Justification:
+Many systems offer a robot, a turret, a radio, a jammer, or an ISR payload. ARIES differentiates by integrating multiple robotic ground nodes into a coordinated mission-effect architecture. The differentiator is the orchestration layer that ranks threats, assigns payloads, accounts for terrain, and supports teleoperators.
+
+Key message:
+“ARIES is not just a robot vehicle. It is a distributed effects manager for robotic ground nodes.”
+
+18.5 Feasibility
+
+Score target: 8/10
+
+Justification:
+The near-term prototype is software-only and local, avoiding hardware dependency. The physical system concept uses existing vehicles, venture-partner retrofit capability, and known L3Harris product families. A 1-to-3-year path is credible if the first phase is limited to teleoperated vehicles, abstract payload integration, simulated effect coordination, and progressive field experimentation.
+
+Key message:
+“Start with simulation and teleoperation. Add payloads and autonomy incrementally.”
+
+19. TRANSITION ROADMAP
+
+Phase 0: Quest 2 Concept Prototype
+Timeline: Immediate
+Deliverables:
+- Local Python simulation
+- AI image classifier
+- Config-driven battle scenario
+- 1980s-style tactical display
+- Priority scoring tables
+- Mission report
+- Gate 0
+- SOW
+- Endorsement document
+- 10-15 minute video
+
+Phase 1: Quest 3 / Internal Demonstrator
+Timeline: 1-2 months after Quest 2
+Deliverables:
+- Improved simulation
+- Better terrain model
+- More robust test cases
+- Optional tabletop robot or RC vehicle surrogate
+- Hardware-free integration mockup
+- System architecture diagrams
+- Evaluation results against defined metrics
+
+Phase 2: Teleoperated Vehicle Surrogate
+Timeline: 3-9 months
+Deliverables:
+- Small-scale vehicle or utility platform
+- Simulated radio / mock network layer
+- Teleoperation interface
+- Payload mass simulators
+- Sensor feed simulation
+- Safety controls
+- Operator-assist software
+
+Phase 3: Venture Partner Integration
+Timeline: 9-18 months
+Deliverables:
+- Polymath retrofit vehicle engagement
+- Vehicle status API / telemetry interface
+- L3Harris radio integration planning
+- Payload interface control document
+- Controlled field trial plan
+- C-UAS / EW / ISR payload selection trade
+
+Phase 4: Business Area Transition
+Timeline: 18-36 months
+Deliverables:
+- Business area sponsor
+- Customer problem statement
+- ERAD / IRAD proposal
+- Program transition plan
+- Candidate customer demo
+- System safety plan
+- Export / compliance strategy
+- Payload integration roadmap
+
+20. RISKS AND MITIGATIONS
+
+Risk 1: Scope is too broad
+Mitigation:
+Define Quest 2 as a software-only mission-effect simulator. Treat physical payloads as roadmap modules, not MVP dependencies.
+
+Risk 2: Reviewers think capability already exists
+Mitigation:
+Position ARIES as the integration/orchestration layer across existing capabilities, not as a claim that each subsystem is novel.
+
+Risk 3: Vehicle autonomy is outside L3Harris core
+Mitigation:
+Make Polymath Robotics the vehicle autonomy layer. L3Harris stays focused on communications, spectrum, ISR, C2, and effects integration.
+
+Risk 4: Weapon autonomy creates review friction
+Mitigation:
+Frame MVP as teleoperator decision support and abstract simulation. Use human-supervised language for real-world kinetic effects. Do not model real fire-control or payload construction.
+
+Risk 5: No sponsor / endorser
+Mitigation:
+Identify a Communications and Spectrum Dominance technical leader, fellow, or senior engineer who can endorse the value of robotic ground networking / distributed spectrum nodes.
+
+Risk 6: Export control
+Mitigation:
+Keep Quest 2 material based on public product information, synthetic simulation, abstract effects, no classified performance values, no controlled technical data, and no implementation detail for real weapons or jamming.
+
+Risk 7: Demo reliability
+Mitigation:
+Build a deterministic local simulation with mock mode. API classification should be optional, cached, and never required for the live demo.
+
+21. CRITICAL PRESENTATION STRATEGY
+
+The presentation should be technical and blunt.
+
+Do not oversell autonomy.
+Say:
+“Teleoperation first, supervised autonomy second, autonomous swarm behavior later.”
+
+Do not oversell weapons.
+Say:
+“Effect modules are represented abstractly. The integration concept is modular and payload-agnostic.”
+
+Do not make this sound like a science-fiction swarm.
+Say:
+“ARIES is a near-term mission-systems integration layer for robotic ground nodes.”
+
+Do not focus on cars.
+Say:
+“The vehicle is the mobility substrate. The value is the distributed L3Harris mission system carried by the vehicle.”
+
+Do not claim L3Harris lacks capabilities.
+Say:
+“L3Harris has many of the components. ARIES integrates and repositions them into an attritable robotic ground architecture.”
+
+22. RECOMMENDED VIDEO STRUCTURE
+
+0:00-1:00
+Problem: modern battlefield requires dangerous forward effects; humans are expensive and vulnerable; robotic ground nodes reduce exposure.
+
+1:00-2:30
+Solution: ARIES architecture; Polymath provides robotic vehicle substrate; L3Harris provides mission systems; ACS provides optional C-UAS payload.
+
+2:30-4:00
+L3Harris integration stack: RF-9820S, RF-9820S-ER, Wraith Shield, RF-9800W/CAMAN, WESCAM, ROVER, VAMPIRE, hC2, Red/Green Wolf, Missile Solutions roadmap.
+
+4:00-7:00
+Software MVP demonstration: classify image inputs, initialize battlefield, show 1980s-style tactical map, show target scoring, show robotic nodes moving and assigning effects.
+
+7:00-9:00
+Technical details: central battle manager, local vehicle scoring, terrain-aware routing, abstract effects, mission report, testbenches.
+
+9:00-11:00
+Transition plan: Quest 3, surrogate demo, Polymath integration, business area transition.
+
+11:00-13:00
+Rubric alignment: strategic alignment, technology alignment, customer relevance, differentiation, feasibility.
+
+13:00-15:00
+Close: ARIES lets L3Harris rapidly extend existing mission systems into dangerous ground positions using low-cost robotic platforms.
+
+23. BEST FINAL FRAMING
+
+ARIES is a robotic ground effects architecture for contested environments. It combines venture-partner vehicle autonomy with L3Harris communications, spectrum dominance, ISR, C-UAS, C2, and modular effects. The near-term MVP is a local AI-assisted simulation that demonstrates how robotic ground nodes can classify threats, prioritize effects, route around terrain, and support teleoperators. The long-term transition path is a teleoperated-first robotic platform that lets L3Harris project mission systems into dangerous positions without exposing personnel.

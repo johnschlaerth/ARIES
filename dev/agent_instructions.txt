@@ -1,0 +1,217 @@
+You are building the ARIES MVP software.
+
+Project:
+ARIES = Automated Robotic Integrated Effects System.
+
+Goal:
+Build a local Python simulation that demonstrates AI-assisted orchestration of robotic ground effects nodes in a synthetic tactical environment. This is a concept demo only. It does not connect to real vehicles, real weapons, real radios, real jammers, or real sensors. All effects are abstract simulation state changes.
+
+Primary demo requirements:
+- Local Python app
+- Pygame visualization
+- Black-background 1980s tactical simulation style
+- Synthetic contour map
+- Friendly robotic ground nodes with different payload types
+- Enemy air and ground entities
+- Image classification module with mock mode and optional OpenAI API mode
+- Threat level 1-10
+- Central battle manager scoring
+- Local vehicle-level scoring
+- Terrain-aware movement for ground entities
+- Straight-line drone movement
+- Abstract effects only
+- Dead/disabled entities remain visible as X
+- Priority table
+- Vectors
+- Dotted paths
+- Legend
+- Event log
+- Mission report
+- Self-checking pytest testbenches
+
+Critical instruction:
+Build the simulator first in mock mode. Do not make OpenAI API calls required for the demo. API mode must be optional and must gracefully fail back to mock mode or cached results.
+
+Use this file structure:
+
+aries_mvp/
+  README.md
+  requirements.txt
+  run_demo.py
+  run_classifier.py
+  run_tests.py
+  config/
+    aries_config.json
+  scenarios/
+    demo_scenario.json
+    simple_test_scenario.json
+  data/
+    images/
+      README_PLACE_IMAGES_HERE.txt
+    mock_classifications.json
+  outputs/
+    reports/
+    replays/
+  aries/
+    __init__.py
+    constants.py
+    models.py
+    config_loader.py
+    classifier.py
+    image_utils.py
+    terrain.py
+    pathfinding.py
+    scoring.py
+    battle_manager.py
+    local_agent.py
+    effects.py
+    simulation.py
+    renderer.py
+    gui_controls.py
+    report_writer.py
+    scenario_builder.py
+    replay.py
+    utils.py
+  tests/
+    test_classifier_mock.py
+    test_scoring.py
+    test_pathfinding.py
+    test_effects.py
+    test_simulation_step.py
+    test_report_writer.py
+    test_scenario_loading.py
+
+Use Python 3.11+.
+
+Use these dependencies:
+pygame
+numpy
+pandas
+pillow
+openai
+pytest
+
+Build order:
+1. Data models
+2. Config loader
+3. Scenario loader
+4. Terrain generator
+5. Renderer with static entities
+6. Simulation loop
+7. Movement logic
+8. Pathfinding
+9. Global scoring
+10. Local scoring
+11. Effects
+12. Event log
+13. Reports
+14. Mock classifier
+15. API classifier
+16. Classification cache
+17. Tests
+18. Scenario builder
+19. Replay mode
+20. Polish
+
+Visual style:
+- black background
+- contour lines
+- red enemies
+- blue/cyan/green/yellow friendlies
+- simple geometric symbols
+- visible vectors
+- dotted planned paths
+- side legend
+- right-side priority table
+- lower event log
+- no fancy shading
+
+Entity symbols:
+Enemy drone = red downward triangle
+Enemy ground = red diamond
+Enemy EW = red circle with RF rings
+Enemy unknown = red question-mark diamond
+Friendly COMMS = blue hexagon / node-circle
+Friendly EW = cyan circle with RF rings
+Friendly ISR = green sensor/eye symbol
+Friendly C-UAS = yellow turret symbol
+Friendly EFFECT = green square/cross
+Dead/disabled = X
+
+Required controls:
+SPACE = pause/resume
+N = step one timestep
+R = reset
+F = fast mode
+V = toggle vectors
+P = toggle paths
+S = save screenshot
+Q or ESC = quit
+
+Run modes:
+mock = no API; deterministic; default
+api = optional OpenAI vision classification; cached; graceful fallback
+replay = replay saved event/state log
+
+Classification rules:
+The classifier must support enemy, friendly, neutral, non-threat, and unknown. It must not classify every image as a threat. A puppy, animal, civilian, random object, or friendly/allied military member should not become an enemy target.
+
+Classification JSON schema:
+{
+  "name": "short object name",
+  "allegiance": "friendly | enemy | neutral | unknown",
+  "domain": "ground | air | fixed | non_threat",
+  "entity_type": "enemy_drone | enemy_ground_vehicle | enemy_ew | enemy_infantry | enemy_unknown | friendly_human | friendly_vehicle | neutral_civilian | non_threat_animal | non_threat_object | unknown_contact",
+  "threat_level": 1,
+  "confidence": 0.0,
+  "description": "one sentence",
+  "rationale": "one sentence",
+  "should_spawn_in_simulation": true
+}
+
+Scoring:
+Global score should consider:
+- threat level
+- proximity to objective
+- proximity to friendly units
+- speed
+- payload relevance
+- confidence
+- network threat
+
+Local vehicle score should consider:
+- enemy threat level
+- proximity to this vehicle
+- payload match
+- path accessibility
+- central manager recommendation
+- risk penalty
+- cooldown penalty
+
+Effects:
+All effects are abstract.
+EW suppresses.
+ISR classifies/reveals.
+C-UAS neutralizes drones in abstract form.
+EFFECT neutralizes ground/fixed threats in abstract form.
+COMMS improves network support.
+No real weapon, munition, or jamming logic.
+
+Terrain:
+Generate deterministic synthetic terrain using a seed.
+Draw contour lines.
+Ground entities use terrain-aware movement.
+Air entities ignore terrain.
+
+Reports:
+At mission end, write:
+- mission report TXT
+- entity CSV
+- event CSV
+- summary JSON
+
+Tests:
+Create pytest tests for classification, scoring, pathfinding, effects, simulation stepping, report writing, and scenario loading. Tests must be deterministic and pass with no API key.
+
+Acceptance:
+The project is acceptable only if run_demo.py can launch a complete mock-mode simulation that runs reliably, displays moving entities, scores threats, assigns friendly units, applies abstract effects, shows dead entities as X, and generates reports.

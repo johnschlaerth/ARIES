@@ -1,0 +1,60 @@
+LHX Accelerator -- Challenge 4
+
+ARIES - Automated Robotic Integrated Effects System
+
+Customer Requirements:
+- Leverage a "Venture Technology Partner" of L3Harris: Leverage a startup partnered with L3Harris in some way
+- Enhance, expand, or leverage an existing L3Harris Technology 
+- Leverage AI in some capacity
+
+Description:
+- Using the venture tech parter Polymath Robotics, ARIES is a robotic platform where existing cars are retrofitted with a an automation system by Polymath Robotics, which turns cars into tele-operated or autonomous vehicles. Using L3Harris radios, the cars can be communicated with and controlled in contested environments and create mesh node networks. The cars can carry diverse payloads as well, including electronic warfare effects, anti-drone turrets from another Venture Technology parter Allen Control Systems, explosive effects, missile launch effects, drone delivery payloads, and other effects. AI will be utilized in a target prioritization algorithm which takes sensor data as an input, such as photos collected by image sensors, and categorizes the enemy units. The algorithm maps the threats in a battle space, ranking them by priority. In this way, each robotic unit can optimize which target they focus on. The algorithm then gives robots direction on the enemy or enemies to target and a path to follow. This system could be as a tactical guide to tele-operator or serve as an autonomous ground swarm algorithm. 
+
+- Venture Technology Partners: 
+	--> Polymath Robotics: Converting cars into robotic platforms
+	--> Allen Control Systems: Car-mounted anti-drone turrets
+
+- Challenges: 
+	--> L3Harris is primarily an electronics/radio company. They do not have a strong foothold in the vehicle prime space. 
+	    The solution is to lean heavily on other companies to build the platform and L3Harris to only provide electronics/
+	    software and maybe system integration. 
+
+Minimum Viable Product:
+1) AI Target Prioritization Algorithm:
+	(A) Categorization Algorithm: Input photo, output description and single number threat/priority level. The algorithm should input the
+	    image and output a threat level (int from 1-10), name, and description. It should use an AI API call to run this calculation. 
+	    It should also compress the image, making it much smaller so the API call does not consume as many tokens. 
+	(B) Map Visualization Code: Plot the position & velocity vector of enemies and friendly units on a map. 
+	  Should be able to quickly reference a battlefield data file (ie a CSV with coordinate vectors) and plot onto the map.
+	  For a real time simulation, the simulator with repeatedly call this code as a function to visualize the battlespace.
+	(C) Priority Tracking Algorithm: Given the data on friendly units [location, velocity vector, effect capability] & enemy units
+	    [position & velocity from (D) simulator, threat level from (A) Categorization Algorithm], determine which enemy to target and 	    velocity vector to take. The system should make an initial categorization of the enemy object using the (A) Categorization
+	    Algorithm and then have the rating become associated with the enemy object thereafter. It should not attempt to re-run the 
+	    categorization algorithm AI during each run
+	(D) Simulator: Given an initial config file (i.e. initial friendly and enemy capabilities, locations, vectors), this engine runs the 	    actions of enemies and uses priority tracking algorithm data to animate friendlies. When a kill effect is successful, the simulator 	    notes this. It also notes if friendlies die. This is visualized on the GUI from (B) Map Visualization Code.
+	(E) Full Demonstration System: Loading up a starting config file, the simulation runs and plots out the battlespace
+	(F) (optional) Config Builder File: GUI that allows for quick creation of a config file to initialize a simulation. You can place 	    enemies or allies and specific types on the map. You can also randomize the map. Config file should also randomly grab an image
+	    from a folder full of images and associate the file path with the enemy entity object or data line. 
+2) Photo/CAD mockups of different effect robots (EW, turret, explosive, drone carrier, missile payload, etc) + visual animation of CAD/photo (using gen AI to mock up visuals) 
+3) Full system diagram (Visio file + image export) 
+4) System Cost Financial Sheet
+5) Image mockups of integrated L3Harris hardware (9820S Radio & Wraith Shield + others)
+6) Gate 0 Concept Slide
+7) Statement of Work (SOW) for ARIES program
+8) Project GAANT chart for SOW + video presentation
+9) Whiteboard content outline/diagrams/visuals for video
+10) 10 Minute Video presentation showcasing ARIES concept for LHX Accelerator Challenge #4
+11) Screen recordings and visual demos of simulation in action 
+12) Slideshow for video --> Each slide jpg will be exported and used as base for video
+
+Plan: 
+1) Solidify project description and requirements. Create most compelling possible story and system for ARIES -- Edit as needed to make most compelling case possible to seasoned L3Harris fellows, engineers, and high level directors. This project is competing with seasoned fellows, so the case must be hyper-compelling. Ensure a full suite of L3Harris products is looked through to determine what makes sense to use in system (high level prototyping engineer director in radio space told me to use 9820S Radio & Wraith Shield technologies)
+2) Use gen code AI to create a working software MVP 
+3) Gather video recording demos of working code + other demo elements
+4) Use GenAI to create physical system mockups that look incredibly realistic, including full robotic system and also how L3Harris products are integrated into system. Method could be inputting images of l3harris product into genAI generator and having it place it into a scene realistically using the reference. 
+5) Spice up GenAI and other images, using image-to-video AI technology. Additionally, using image/video to CAD AI could help too to generate STLs and load them in Blender or another program. 
+6) AI assisted generation of SOW, Financial estimates, project plan/gaant chart
+7) Create script/whiteboard plan/other video planning elements. The video will be simple, essentially a slideshow of the demo elements with a spoken VoiceOver and also a whiteboard explanation of concepts. 
+8) Film spoken parts, whiteboard drawings
+9) Edit video, final edits on major deliverables (video, Gate 0, SOW)
+

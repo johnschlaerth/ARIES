@@ -1,0 +1,257 @@
+================================================================================
+ARIES SOFTWARE DEMONSTRATION SCRIPT
+5-Minute Technical Segment — L3Harris Accelerator Challenge 4
+Audience: Senior Technical Scientists, Fellows, and Engineering Directors, L3Harris
+================================================================================
+
+TIMING GUIDE: ~750 words at a calm, deliberate speaking pace = 5 minutes.
+[VISUAL] tags indicate what to have on screen at each moment.
+Do not rush. Pause one beat between sections. Let the software speak.
+
+================================================================================
+SECTION 1 — FRAMING  (approx. 40 seconds)
+================================================================================
+
+[VISUAL: ARIES Mission Control launcher — run_launcher.py, full screen]
+
+What you are looking at is the ARIES Mission Control interface.
+
+ARIES — Automated Robotic Integrated Effects System — is a distributed robotic
+ground effects architecture. The physical concept uses Polymath Robotics to
+retrofit low-cost vehicles into teleoperated or autonomy-ready ground nodes.
+Allen Control Systems provides the counter-UAS turret package. L3Harris provides
+the backbone: the RF-9820S radio mesh, Wraith Shield spectrum sensing and
+defense, WESCAM ISR payloads, and the C2 and orchestration layer.
+
+The value is not the vehicle. The value is what rides in it: resilient mesh
+networking, spectrum dominance, ISR, counter-UAS, and modular effects —
+repositioned into a mobile, attritable, robotically operated ground node that
+can project L3Harris capabilities into positions that would otherwise require
+exposing personnel.
+
+This software is Layer 5 of that architecture — the AI mission-orchestration
+layer. It does not control hardware. What it demonstrates is the decision logic,
+the classification pipeline, and the distributed tasking model that would drive
+a real deployed system.
+
+================================================================================
+SECTION 2 — THE CLASSIFICATION PIPELINE  (approx. 75 seconds)
+================================================================================
+
+[VISUAL: run_classifier_gui.py — show image appearing, loading bar animating,
+then classification result card appearing: entity name, allegiance, threat level,
+confidence bar. Show a second image cycle through]
+
+The intelligence chain starts here.
+
+ARIES ingests field imagery — drone feeds, WESCAM outputs, ground cameras, or
+operator uploads — and submits them to GPT-4o-mini via a structured vision API
+call. Before submission, each image is compressed to 512 pixels on the longest
+side to minimize token cost. The model returns a typed JSON classification:
+entity name, allegiance, domain, entity type, threat level on a 1-to-10 integer
+scale, and a float confidence score.
+
+The prompt is engineered with explicit friend-or-foe rules. US and NATO
+equipment — Predator UAVs, M1 Abrams, allied infantry — returns
+allegiance: friendly and is excluded from the threat queue, never targeted.
+Russian, Chinese, and Iranian equipment returns allegiance: enemy with threat
+levels weighted by lethality class. FPV drones and loitering munitions score
+threat level 7 to 9. Unknown military contacts enter a probabilistic queue as
+unknown_contact — held for ISR clarification before any engagement consideration.
+
+Critically, the classifier runs once. The result is a typed entity configuration
+file that carries each image's real identity into every subsequent simulation
+run. No repeated API calls per mission. One classification session. Persistent
+config. Indefinitely reused until the operator initiates a new cycle.
+
+================================================================================
+SECTION 3 — MISSION CONFIG AND LAUNCH  (approx. 25 seconds)
+================================================================================
+
+[VISUAL: Back to Mission Control — point to settings: enemy count, seed,
+classifier toggle, start paused. Then press SPACE to launch]
+
+From Mission Control, the operator configures the engagement: number of friendly
+and enemy nodes, map dimensions, terrain seed for reproducibility, whether to
+run a fresh classification pass before launch, and display options. This is the
+operator's pre-mission brief, digitized.
+
+Press Space. The simulation launches.
+
+================================================================================
+SECTION 4 — THE TACTICAL MAP AND SCORING  (approx. 90 seconds)
+================================================================================
+
+[VISUAL: Tactical map — entities populating the battlespace. Let it run for
+several seconds unparsed before beginning to explain]
+
+This is the ARIES battlespace. The visual grammar is unambiguous by design.
+
+Red downward triangles are enemy drones — moving on a direct intercept path to
+the objective, because air platforms ignore terrain. Red diamonds are enemy
+ground vehicles — routing around high-cost terrain via A* pathfinding over a
+procedurally generated elevation field. The red concentric circles are enemy EW
+nodes — the highest-priority targets because they degrade our network radius by
+35% when inside their jamming envelope.
+
+On the friendly side: blue is the ARIES-COMMS relay extending the L3Harris mesh
+footprint. Cyan is the ARIES-EW node — spectrum denial and suppression. Green is
+ARIES-ISR, the sensor node backed by WESCAM-class payload concepts. Yellow is
+ARIES-CUAS, the counter-drone turret. The green cross is the ARIES-EFFECT node,
+representing close-effects capability.
+
+[VISUAL: Point to right-panel priority table — show it updating]
+
+The right panel is the decision audit trail. The central battle manager runs a
+global threat scoring function every timestep. The formula is explicit:
+
+  global_score = 4.0 × threat_level
+               + 20.0 × objective_proximity
+               + 10.0 × friendly_proximity
+               + 10.0 × speed
+               + 10.0 × payload_relevance
+               +  5.0 × classification_confidence
+               +  5.0 × network_threat
+
+Every weight is a visible parameter. Every recommendation can be traced and
+challenged. This is not a black-box neural policy — it is an explainable
+decision-support system designed for human supervisors who need to understand
+why the system is recommending what it recommends.
+
+[VISUAL: Point to assignment table — dotted paths moving on the map]
+
+Each ARIES node also runs its own local scoring function independently: weighting
+proximity, payload-target match, path accessibility, and its own cooldown state.
+When the central manager and the local agent agree, the unit acts with high
+confidence. When comms are degraded and the central link is unavailable, the
+local agent continues to operate autonomously on its last known state — a
+design principle directly relevant to contested RF environments where the
+Wraith Shield and RF-9820S are fighting for spectrum.
+
+================================================================================
+SECTION 5 — BIDIRECTIONAL COMBAT AND MISSION OUTPUTS  (approx. 50 seconds)
+================================================================================
+
+[VISUAL: Show a friendly node taking hits — health bar dropping, color shifting
+green → amber → orange-red. Event log entries accumulating. Show an X appear]
+
+The simulation is bidirectional. Enemy units carry attack parameters — range,
+hit probability, cooldown — and engage ARIES nodes when they come within their
+envelope. Drones strafe ISR and CUAS nodes. EW nodes jam the mesh, degrading
+the network bonus for connected units. Ground vehicles close and engage EFFECT
+nodes. ARIES nodes can be killed. They remain on screen as X marks, which
+changes the remaining assignment table in real time. The system adapts.
+
+[VISUAL: Simulation ends. Show the terminal output / mission report summary]
+
+At mission termination the system exports a structured mission report: final
+entity states, assignment history, network uptime percentage, average threat
+response time, and a full timestamped event trace — every classification
+improvement, every engagement, every kill, in order. That is your post-mission
+analysis artifact. It is deterministic and reproducible. Run the same seed,
+get the same result. That is essential for validation.
+
+================================================================================
+SECTION 6 — CLOSE  (approx. 30 seconds)
+================================================================================
+
+[VISUAL: Hold on the tactical map mid-engagement, or return to Mission Control]
+
+What ARIES demonstrates is that the hardest part of autonomous ground effects —
+the intelligence layer — can be built, validated, and shown to work, independent
+of hardware procurement timelines.
+
+The scoring architecture is fully explainable. The classification pipeline is
+live, API-driven, and friend-or-foe discriminating. The decision loop is
+deterministic, testable, and traceable. The network model degrades correctly
+when enemy EW is in the envelope. Friendly nodes can be lost.
+
+When Polymath's autonomy stack is providing real vehicle telemetry, and the
+RF-9820S and Wraith Shield are carrying the mesh traffic, this layer is
+architected to receive that state and drive the response.
+
+The brain is ready. We are working on attaching the body.
+
+================================================================================
+END OF SCRIPT  (~750 words / 5 minutes)
+================================================================================
+
+
+================================================================================
+TECHNICAL BACKUP — Q&A TALKING POINTS
+================================================================================
+
+Q: Why GPT-4o-mini and not a purpose-built classifier or fine-tuned model?
+A: GPT-4o-mini provides sufficient vision classification for a prototype with
+   zero training infrastructure. The API interface is model-agnostic — changing
+   the model string in aries_config.json is the only required change. A
+   production system would run a fine-tuned model on hardened embedded compute,
+   entirely on-node and offline. The architecture supports that transition.
+
+Q: How does the system handle misclassifications?
+A: Low-confidence results (below ~0.4) enter the threat queue as unknown_contact
+   with threat level 3 — conservative, never auto-engaged. ISR nodes are
+   assigned to refine those contacts over subsequent timesteps by improving
+   confidence and resolving the entity type. The system never fires on an
+   unknown. That constraint is hardcoded at the effects layer, not just the
+   scoring layer.
+
+Q: What prevents this from being a lethal autonomous weapon system?
+A: Several mechanisms. First, the simulation is effects-abstract — there is no
+   fire-control model, no munition, no real engagement. Second, the roadmap
+   explicitly calls for human-authorized engagement for kinetic effects in any
+   real deployment. Third, the scoring system is an operator decision-support
+   tool, not an autonomous kill-chain. The human remains in the loop. The
+   system recommends. The operator approves.
+
+Q: What is the two-tier architecture's advantage over a single centralized planner?
+A: When the radio link degrades — which Wraith Shield and RF-9820S are designed
+   to fight through, but which real contested environments will still challenge
+   — each local node continues to function on its own scoring function. The
+   local agent has the last known central recommendation cached. It also has
+   its own proximity and payload-match calculations running continuously. The
+   result is graceful degradation: network degradation reduces the central bonus
+   weight, not the ability to operate. That is an explicit design feature.
+
+Q: How does the terrain model relate to a real operational environment?
+A: The current terrain is procedurally generated for demonstration. In a
+   production system, this cost field would be populated from DTED or similar
+   elevation data. The A* pathfinding implementation is terrain-agnostic — it
+   operates on any 2D cost grid. Swapping the procedural generator for a real
+   elevation ingestion layer does not require changes to the routing engine.
+
+Q: What is the transition path from this simulation to a fielded prototype?
+A: Phase 1 is internal demonstrator: improved simulation, field-relevant
+   scenarios. Phase 2 is a teleoperated surrogate vehicle with simulated radio
+   and payload interfaces. Phase 3 is Polymath Robotics integration with real
+   vehicle telemetry and an L3Harris radio control link. Phase 4 is business
+   area transition with a defined customer and IRAD proposal. The software MVP
+   you are looking at is Phase 0. The architecture is designed to be extended
+   at each phase without requiring a rewrite of the decision layer.
+
+Q: How does ARIES avoid competing with L3Harris's existing ground vehicle programs?
+A: ARIES is an orchestration and integration layer, not a vehicle program. The
+   vehicle is provided by Polymath Robotics. L3Harris's role is the mission
+   systems, communications, spectrum, ISR, C2, and payload integration — which
+   is exactly what the company already does at a system level. ARIES is not
+   asking L3Harris to become a vehicle prime. It is asking L3Harris to extend
+   existing product families onto an attritable robotic mobility substrate that
+   someone else builds and maintains.
+
+================================================================================
+VISUAL SEQUENCE SUMMARY (for screen sharing prep)
+================================================================================
+
+Beat 1:   run_launcher.py — full screen Mission Control
+Beat 2:   run_classifier_gui.py — two or three image classifications live
+Beat 3:   return to Mission Control — adjust one setting, press SPACE
+Beat 4:   run_demo.py launches — tactical map appearing with entities
+Beat 5:   let sim run ~10-15 steps unparsed (let audience absorb visual)
+Beat 6:   point to right panel priority table and assignment list
+Beat 7:   point to dotted movement paths and terrain contour lines
+Beat 8:   show a friendly taking damage — health bar, amber color, event log
+Beat 9:   show mission end state — X marks, terminal report output
+Beat 10:  return to Mission Control or freeze on tactical map for close
+
+Total visual transitions: 10. Pace: one per 30 seconds on average.
+================================================================================

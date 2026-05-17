@@ -1,0 +1,1249 @@
+ARIES MVP SOFTWARE REQUIREMENTS
+Local Python Simulation for AI-Assisted Robotic Ground Effects Orchestration
+Working Version: Quest 2 / Demo-First Specification
+
+1. PURPOSE
+
+The ARIES MVP software shall demonstrate a local, deterministic, Python-based simulation of robotic ground effects nodes operating in a synthetic tactical environment.
+
+The MVP shall show:
+- Image-based object classification using OpenAI API or mock data
+- Threat classification into enemy, friendly, neutral, non-threat, or unknown
+- Threat priority scoring on a 1-10 scale
+- Synthetic contour-map visualization
+- Friendly robotic ground nodes with different payload classes
+- Enemy air and ground entities
+- Terrain-aware movement for ground entities
+- Straight-line movement for drones
+- Central battle manager scoring
+- Local vehicle-level scoring
+- Abstract effect assignment
+- Visual vectors
+- Entity status changes
+- Event logging
+- Mission outcome reporting
+- Self-checking tests / testbenches
+
+The MVP shall not connect to real vehicles, real radios, real sensors, real jammers, real turrets, or real weapons. It is a concept-demonstration simulator.
+
+2. MVP DESIGN PRINCIPLE
+
+The MVP must be simple, reliable, and visually clear.
+
+The goal is not to build a full wargame. The goal is to show a working software representation of the ARIES concept:
+- robotic ground nodes
+- classified threats
+- prioritization logic
+- terrain-aware movement
+- effect assignment
+- mission results
+
+Reliability is more important than feature count.
+
+3. REQUIRED STYLE
+
+The GUI shall look like a clean 1980s tactical simulation:
+- black background
+- solid red, green, blue, yellow, cyan, white colors
+- simple line work
+- contour lines
+- vectors
+- dotted paths
+- geometric symbols
+- side legend
+- side data tables
+- no fancy shading
+- no photorealistic graphics
+- no unnecessary animations
+- crisp, readable, technical look
+
+Target visual reference:
+WarGames-style tactical command display, but cleaner and more legible.
+
+4. TECHNICAL STACK
+
+Language:
+Python 3.11+
+
+Preferred libraries:
+- pygame for visualization and event loop
+- numpy for math
+- pandas for tables / CSV export
+- pillow for image resizing/compression
+- openai for API classification
+- json for config
+- csv for reports
+- pathlib for paths
+- dataclasses for entity structures
+- pytest for tests
+
+Optional libraries:
+- scipy for pathfinding or interpolation if useful
+- tkinter only for simple file dialogs if needed
+
+Avoid:
+- heavy web frameworks
+- complicated game engines
+- unnecessary dependencies
+- cloud dependencies except optional OpenAI classification
+- anything that makes the demo fragile
+
+5. RUN MODES
+
+The software shall support three run modes:
+
+Mode 1: Mock Demo Mode
+- No API key required
+- Uses pre-defined classification results
+- Fully deterministic
+- Best mode for live presentation
+- Must always work offline
+
+Mode 2: API Classification Mode
+- Uses OpenAI vision-capable model
+- Reads images from local image folder
+- Compresses images before API call
+- Produces classification JSON
+- Caches classification results
+- Falls back to mock classification if API fails
+
+Mode 3: Replay Mode
+- Loads saved simulation result
+- Replays prior mission events
+- Useful for screen recording and backup demo
+
+6. CONFIGURATION
+
+The root config file shall be:
+
+config/aries_config.json
+
+It shall include:
+
+{
+  "run_mode": "mock",
+  "openai": {
+    "enabled": false,
+    "model": "gpt-4o-mini",
+    "api_key_env_var": "OPENAI_API_KEY",
+    "timeout_seconds": 20,
+    "max_retries": 2,
+    "image_max_side_px": 512,
+    "cache_results": true
+  },
+  "simulation": {
+    "seed": 42,
+    "time_step_seconds": 1.0,
+    "max_steps": 600,
+    "auto_start": false,
+    "start_paused": true,
+    "friendly_fire_enabled": false,
+    "terrain_enabled": true,
+    "network_enabled": true,
+    "output_reports": true
+  },
+  "display": {
+    "width": 1400,
+    "height": 900,
+    "fps": 30,
+    "style": "retro_1980s",
+    "show_vectors": true,
+    "show_paths": true,
+    "show_scores": true,
+    "show_legend": true,
+    "show_event_log": true
+  },
+  "paths": {
+    "scenario_file": "scenarios/demo_scenario.json",
+    "image_folder": "data/images",
+    "classification_cache": "outputs/classification_cache.json",
+    "report_folder": "outputs/reports",
+    "replay_folder": "outputs/replays"
+  }
+}
+
+7. RECOMMENDED FILE STRUCTURE
+
+aries_mvp/
+  README.md
+  run_demo.py
+  run_classifier.py
+  run_tests.py
+  config/
+    aries_config.json
+  scenarios/
+    demo_scenario.json
+    simple_test_scenario.json
+    drone_swarm_scenario.json
+    mixed_ground_air_scenario.json
+  data/
+    images/
+      README_PLACE_IMAGES_HERE.txt
+    mock_classifications.json
+  outputs/
+    classification_cache.json
+    reports/
+    replays/
+  aries/
+    __init__.py
+    constants.py
+    models.py
+    config_loader.py
+    classifier.py
+    image_utils.py
+    terrain.py
+    pathfinding.py
+    scoring.py
+    battle_manager.py
+    local_agent.py
+    effects.py
+    simulation.py
+    renderer.py
+    gui_controls.py
+    report_writer.py
+    scenario_builder.py
+    replay.py
+    utils.py
+  tests/
+    test_classifier_mock.py
+    test_scoring.py
+    test_pathfinding.py
+    test_effects.py
+    test_simulation_step.py
+    test_report_writer.py
+    test_scenario_loading.py
+
+8. ENTITY MODEL
+
+All battlefield objects shall be represented as Entity objects.
+
+Required fields:
+
+id:
+Unique string identifier.
+
+name:
+Human-readable name.
+
+allegiance:
+One of:
+- friendly
+- enemy
+- neutral
+- unknown
+
+domain:
+One of:
+- ground
+- air
+- fixed
+- non_threat
+
+entity_type:
+One of:
+- friendly_comms
+- friendly_ew
+- friendly_isr
+- friendly_cuas
+- friendly_effect
+- enemy_drone
+- enemy_ground_vehicle
+- enemy_ew
+- enemy_infantry
+- enemy_unknown
+- neutral_civilian
+- friendly_human
+- non_threat_animal
+- non_threat_object
+- unknown_contact
+
+payload_type:
+One of:
+- comms
+- ew
+- isr
+- cuas
+- effect
+- none
+
+position:
+[x, y]
+
+velocity:
+[vx, vy]
+
+speed:
+Float.
+
+health:
+0-100.
+
+alive:
+Boolean.
+
+disabled:
+Boolean.
+
+threat_level:
+Integer 1-10.
+
+confidence:
+Float 0.0-1.0.
+
+classification_source:
+One of:
+- mock
+- openai
+- manual
+- scenario
+
+description:
+Short text description.
+
+priority_score_global:
+Float.
+
+priority_score_local:
+Float.
+
+target_id:
+ID of currently assigned target.
+
+path:
+List of [x, y] waypoints.
+
+effect_range:
+Float.
+
+effect_cooldown_steps:
+Integer.
+
+effect_cooldown_remaining:
+Integer.
+
+effect_probability:
+Float 0.0-1.0.
+
+magazine:
+Integer or null.
+
+network_radius:
+Float.
+
+sensor_radius:
+Float.
+
+status_text:
+Short display status.
+
+9. SYMBOL SYSTEM
+
+Enemy entities:
+- Enemy air / drone: red downward triangle
+- Enemy ground entity: red diamond
+- Enemy EW node: red circle with RF rings
+- Enemy unknown: red question mark diamond
+- Dead / disabled enemy: red X
+
+Friendly entities:
+- ARIES-COMMS: blue hexagon or blue node-circle with rings
+- ARIES-EW: cyan circle with RF rings
+- ARIES-ISR: green eye / green circle with sensor wedge
+- ARIES-CUAS: yellow turret / yellow triangle-in-square
+- ARIES-EFFECT: green square or green square with cross
+- Dead / disabled friendly: gray X
+
+Neutral / non-threat:
+- Neutral civilian / friendly human: white circle
+- Non-threat animal: white small dot or paw-like placeholder
+- Non-threat object: gray square
+- Unknown neutral: white question mark
+
+Required legend:
+The right side of the screen shall show every symbol, color, and meaning.
+
+10. COLOR SYSTEM
+
+Background:
+Black
+
+Contour lines:
+Dark green or dim gray
+
+Friendly units:
+Blue, green, cyan, yellow depending on type
+
+Enemy units:
+Red
+
+Neutral / non-threat:
+White or gray
+
+Vectors:
+White or yellow
+
+Planned paths:
+Dotted cyan or dotted green
+
+Effect radius:
+Dim outline only
+
+Disabled / killed:
+Gray or red X
+
+Text:
+Green, white, cyan, or yellow
+
+11. SCENARIO FILE FORMAT
+
+Each scenario shall be a JSON file with:
+
+{
+  "scenario_name": "Demo Scenario",
+  "description": "Mixed air and ground threat scenario for ARIES MVP.",
+  "map": {
+    "width": 1000,
+    "height": 700,
+    "terrain_seed": 123,
+    "contour_count": 12,
+    "objective_position": [850, 350],
+    "friendly_base_position": [100, 350]
+  },
+  "friendly_entities": [],
+  "enemy_entities": [],
+  "neutral_entities": [],
+  "image_assignments": []
+}
+
+Each entity entry shall contain all required Entity fields or defaults shall be applied.
+
+12. CLASSIFICATION MODULE
+
+File:
+aries/classifier.py
+
+Purpose:
+Classify images into simulation-ready entity classifications.
+
+Inputs:
+- image file path
+- config
+- optional mock classification table
+
+Outputs:
+ClassificationResult object with:
+- image_path
+- name
+- allegiance
+- domain
+- entity_type
+- threat_level
+- confidence
+- description
+- rationale
+- recommended_symbol
+- should_spawn_in_simulation
+- safety_notes
+
+Classification categories:
+- enemy_drone
+- enemy_ground_vehicle
+- enemy_ew
+- enemy_infantry
+- enemy_unknown
+- friendly_human
+- friendly_vehicle
+- neutral_civilian
+- non_threat_animal
+- non_threat_object
+- unknown_contact
+
+Threat rules:
+- enemy combat-relevant object: threat 3-10
+- enemy drone: usually threat 6-10
+- enemy EW / sensor / command node: usually threat 7-10
+- enemy ground vehicle: usually threat 5-9
+- unknown military-looking object: threat 4-7
+- friendly U.S. / allied military member: threat 1, allegiance friendly
+- civilian: threat 1, allegiance neutral
+- puppy / animal: threat 1, allegiance neutral or non-threat
+- random object: threat 1, non-threat
+- uncertain image: allegiance unknown, threat 3, confidence low
+
+Important:
+The classifier shall never force every image into an enemy category. It must explicitly support non-threat and friendly classifications.
+
+13. OPENAI CLASSIFIER PROMPT REQUIREMENTS
+
+When API mode is enabled, the prompt shall instruct the model to return only valid JSON.
+
+Required JSON schema:
+
+{
+  "name": "short object name",
+  "allegiance": "friendly | enemy | neutral | unknown",
+  "domain": "ground | air | fixed | non_threat",
+  "entity_type": "enemy_drone | enemy_ground_vehicle | enemy_ew | enemy_infantry | enemy_unknown | friendly_human | friendly_vehicle | neutral_civilian | non_threat_animal | non_threat_object | unknown_contact",
+  "threat_level": 1,
+  "confidence": 0.0,
+  "description": "one sentence",
+  "rationale": "one sentence",
+  "should_spawn_in_simulation": true
+}
+
+The classifier shall validate the JSON. If invalid:
+- retry once
+- if still invalid, produce unknown_contact with confidence 0.2 and threat level 3
+- log error
+
+14. IMAGE COMPRESSION
+
+File:
+aries/image_utils.py
+
+Requirements:
+- Load image using Pillow
+- Convert to RGB
+- Resize so longest side is <= config.openai.image_max_side_px
+- Save temporary compressed image to outputs/temp/
+- Use compressed image for API call
+- Preserve original file path in classification result
+- Delete temp files after call unless debug mode enabled
+
+15. CLASSIFICATION CACHE
+
+File:
+outputs/classification_cache.json
+
+Requirements:
+- Cache by image file hash
+- Store classification result
+- Store timestamp
+- Store model name
+- Store original image path
+- Store whether result came from mock or API
+
+If image hash exists in cache:
+- do not call API again
+- load cached result
+
+16. TERRAIN MODEL
+
+File:
+aries/terrain.py
+
+Purpose:
+Generate a synthetic contour-map terrain field.
+
+Requirements:
+- Generate deterministic terrain based on seed
+- Terrain shall be a 2D cost field
+- Low cost = easy movement
+- High cost = difficult movement
+- Impassable terrain optional but not required
+- Contour lines shall be drawn from elevation/cost field
+- Ground entities shall be affected by terrain cost
+- Air entities shall ignore terrain and fly straight
+
+Simple acceptable implementation:
+- Generate several Gaussian hills
+- Sum them into an elevation map
+- Convert slope/elevation to movement cost
+- Draw contour lines at fixed elevation bands
+
+17. PATHFINDING
+
+File:
+aries/pathfinding.py
+
+Purpose:
+Create simple terrain-aware paths for ground entities.
+
+Requirements:
+- Input start point, goal point, terrain cost grid
+- Output list of waypoints
+- Must be deterministic
+- Must avoid high-cost terrain when possible
+- Must be fast enough for demo
+
+Acceptable methods:
+- A* grid search
+- Greedy best-first with terrain penalty
+- Waypoint simplification after path generation
+
+For MVP:
+A* is preferred if simple enough.
+
+Air entities:
+- No pathfinding
+- Move directly toward target or objective
+
+18. CENTRAL BATTLE MANAGER
+
+File:
+aries/battle_manager.py
+
+Purpose:
+Compute global threat ranking and recommend friendly assignments.
+
+Inputs:
+- all friendly entities
+- all enemy entities
+- neutral entities
+- terrain
+- objective position
+- network state
+- current timestep
+
+Outputs:
+- global threat table
+- recommended assignments
+- priority score per enemy
+- recommended friendly-to-target map
+
+Global priority score:
+score = A + B + C + D + E + F + G
+
+Where:
+A = threat_level * 10
+B = objective_proximity_score
+C = friendly_proximity_score
+D = speed_score
+E = payload_relevance_score
+F = confidence_score
+G = network_threat_score
+
+Recommended weights:
+threat_level contribution: 40%
+objective proximity: 20%
+friendly proximity: 10%
+speed: 10%
+payload relevance: 10%
+confidence: 5%
+network threat: 5%
+
+Normalized formula:
+global_score =
+  4.0 * threat_level
++ 2.0 * objective_proximity_norm
++ 1.0 * friendly_proximity_norm
++ 1.0 * speed_norm
++ 1.0 * payload_relevance_norm
++ 0.5 * confidence_norm
++ 0.5 * network_threat_norm
+
+Then scale or display as 0-100.
+
+Definitions:
+objective_proximity_norm:
+Higher when enemy is closer to objective.
+
+friendly_proximity_norm:
+Higher when enemy is closer to friendly units.
+
+speed_norm:
+Higher for fast-moving threats such as drones.
+
+payload_relevance_norm:
+Higher when at least one friendly payload type is well matched to the threat.
+
+confidence_norm:
+Higher when classification confidence is high.
+
+network_threat_norm:
+Higher when the enemy threatens a communications relay, C2 node, or ISR node.
+
+19. LOCAL VEHICLE AGENT
+
+File:
+aries/local_agent.py
+
+Purpose:
+Each friendly vehicle computes its own local target preference.
+
+Inputs:
+- friendly entity
+- visible enemy entities
+- terrain
+- central battle manager recommendation
+- current timestep
+
+Outputs:
+- local target score table
+- selected target
+- desired movement vector
+- desired path
+- recommended status text
+
+Local score formula:
+local_score =
+  3.0 * enemy_threat_level
++ 2.5 * proximity_score
++ 2.0 * payload_match_score
++ 1.0 * path_accessibility_score
++ 1.0 * central_manager_bonus
+- 1.5 * risk_penalty
+- 1.0 * cooldown_penalty
+
+Definitions:
+enemy_threat_level:
+Threat level 1-10.
+
+proximity_score:
+Higher when enemy is closer to this friendly unit.
+
+payload_match_score:
+High when friendly payload is appropriate for enemy type.
+
+path_accessibility_score:
+Higher when terrain path cost is low.
+
+central_manager_bonus:
+Positive boost when central battle manager assigns this target.
+
+risk_penalty:
+Penalty when vehicle would move too close to high-threat entity.
+
+cooldown_penalty:
+Penalty when payload is unavailable due to cooldown or empty magazine.
+
+20. PAYLOAD MATCHING RULES
+
+Friendly COMMS:
+Primary targets:
+- none
+Primary behavior:
+- move to improve network coverage
+- avoid threats
+- support friendly cluster
+- maintain relay geometry
+
+Friendly EW:
+Strong against:
+- enemy drones
+- enemy EW
+- enemy unknown electronic nodes
+Weak against:
+- ground vehicles
+- infantry-like entities
+Effect:
+- suppress / degrade within abstract radius
+
+Friendly ISR:
+Strong against:
+- unknown contacts
+- enemy ground entities
+- enemy EW nodes
+Effect:
+- increases confidence
+- reveals classification
+- improves global scoring
+
+Friendly C-UAS:
+Strong against:
+- enemy drones
+Weak against:
+- ground entities
+Effect:
+- neutralizes drones within range using abstract probability
+
+Friendly EFFECT:
+Strong against:
+- enemy ground vehicles
+- fixed enemy nodes
+- enemy EW nodes
+Weak against:
+- fast drones
+Effect:
+- neutralizes target within range using abstract probability
+- this is a simulation-only close-effect abstraction
+
+21. EFFECT RESOLUTION
+
+File:
+aries/effects.py
+
+Purpose:
+Apply abstract simulation effects.
+
+Effects:
+- suppress
+- classify
+- relay
+- neutralize
+- disable
+- reveal
+
+Rules:
+- No real fire-control, launch, jamming, or munition logic shall be included.
+- Effects are abstract state transitions.
+- Effects shall use range, cooldown, probability, and payload match.
+- Disabled/killed entities remain on the map as X.
+
+EW suppress:
+If enemy within EW radius:
+- reduce enemy speed by percentage
+- reduce enemy threat temporarily
+- optionally mark as suppressed
+
+ISR classify:
+If unknown within sensor radius:
+- increase confidence
+- optionally convert unknown to classified type
+
+C-UAS neutralize:
+If enemy drone within range and payload available:
+- roll deterministic random using seeded RNG
+- if success, set alive=false, disabled=true, status=X
+- if failure, log miss/failure
+- start cooldown
+
+Effect neutralize:
+If ground/fixed enemy within range and payload available:
+- roll deterministic random
+- if success, disable target
+- if failure, log failure
+- start cooldown
+
+Relay:
+If friendly within relay radius:
+- mark as network_supported=true
+- improve command confidence
+
+22. SIMULATION LOOP
+
+File:
+aries/simulation.py
+
+Loop per timestep:
+
+1. Read current state
+2. Update classification-dependent properties
+3. Compute network state
+4. Compute central battle manager scores
+5. Compute local vehicle decisions
+6. Generate or update paths
+7. Move friendly entities
+8. Move enemy entities
+9. Apply effects
+10. Update cooldowns
+11. Update killed/disabled state
+12. Log events
+13. Render frame
+14. Check mission end conditions
+15. Save replay frame data if enabled
+
+Mission end conditions:
+- max_steps reached
+- all enemies disabled
+- objective destroyed / reached by enemy
+- all friendly ARIES units disabled
+
+23. ENEMY BEHAVIOR
+
+Enemy drone:
+- red downward triangle
+- flies straight or near-straight toward objective or defended asset
+- ignores terrain
+- high speed
+- high priority
+
+Enemy ground vehicle:
+- red diamond
+- moves toward objective using terrain-aware path
+- medium speed
+- medium/high threat
+
+Enemy EW:
+- red circle with RF rings
+- moves slowly or remains fixed
+- degrades nearby friendly network in abstract form
+- high priority
+
+Enemy unknown:
+- red or orange question-mark diamond
+- moves slowly or follows scenario behavior
+- classification can improve through ISR
+
+Neutral/non-threat:
+- does not attack
+- may remain stationary
+- must not be targeted by friendly effect logic
+
+Friendly human / allied:
+- must not be targeted
+- if classified as friendly, display as friendly or neutral marker
+
+24. NETWORK MODEL
+
+File:
+aries/scoring.py or aries/battle_manager.py
+
+Purpose:
+Represent simple network connectivity.
+
+Requirements:
+- Each COMMS node has network_radius
+- Other friendly units are connected if within radius of any relay or command node
+- Disconnected friendly units receive local-only behavior
+- Connected units receive central manager bonus
+- Enemy EW can reduce network radius in an abstract way
+- Network state displayed in side panel
+
+Network visualization:
+- Draw dim blue/cyan circles for relay range
+- Draw thin lines between connected friendly nodes
+- Show “CONNECTED” or “LOCAL ONLY” in entity table
+
+25. GUI / RENDERER
+
+File:
+aries/renderer.py
+
+Requirements:
+- Black background
+- Draw contour terrain map
+- Draw objective marker
+- Draw friendly base marker
+- Draw all entities with symbols
+- Draw velocity vectors
+- Draw intended movement vectors
+- Draw planned paths as dotted lines
+- Draw effect ranges optionally
+- Draw network links
+- Draw dead/disabled entities as X
+- Draw side legend
+- Draw top status bar
+- Draw right-side priority table
+- Draw lower event log
+
+Controls:
+SPACE = pause/resume
+N = advance one timestep
+R = reset scenario
+F = toggle fast mode
+V = toggle vectors
+P = toggle paths
+S = save screenshot
+Q or ESC = quit
+
+Required on-screen panels:
+- Mission time / timestep
+- Run mode
+- Scenario name
+- Friendly count
+- Enemy active count
+- Objective status
+- Global priority top 5
+- Friendly assignments
+- Event log last 10 lines
+- Legend
+
+26. REPORT WRITER
+
+File:
+aries/report_writer.py
+
+At mission end, write:
+
+outputs/reports/mission_report_TIMESTAMP.txt
+outputs/reports/mission_entities_TIMESTAMP.csv
+outputs/reports/mission_events_TIMESTAMP.csv
+outputs/reports/mission_summary_TIMESTAMP.json
+
+Mission report shall include:
+- scenario name
+- run mode
+- simulation seed
+- total timesteps
+- mission outcome
+- number enemies neutralized
+- number enemies remaining
+- number friendlies disabled
+- objective status
+- average threat response time
+- network uptime percentage
+- top threats by global score
+- final entity states
+- event log
+- notes on mock/API classification
+
+27. CONFIG BUILDER
+
+File:
+aries/scenario_builder.py
+
+MVP requirement:
+A simple config builder is desirable but secondary to simulation reliability.
+
+Minimum viable config builder:
+- Launch separate Python program
+- Display same map
+- Allow user to place friendly/enemy units using mouse clicks
+- Keyboard selects entity type
+- Save scenario JSON
+
+Controls:
+1 = friendly COMMS
+2 = friendly EW
+3 = friendly ISR
+4 = friendly C-UAS
+5 = friendly EFFECT
+6 = enemy drone
+7 = enemy ground
+8 = enemy EW
+9 = enemy unknown
+0 = neutral/non-threat
+S = save scenario
+L = load scenario
+R = randomize scenario
+ESC = quit
+
+Drag-and-drop:
+Nice-to-have only.
+Do not block MVP on drag-and-drop.
+
+28. TESTBENCHES
+
+All tests shall be self-checking and runnable with:
+
+python run_tests.py
+
+or:
+
+pytest tests/
+
+Required tests:
+
+test_classifier_mock.py
+- Confirm mock classification loads
+- Confirm puppy/non-threat returns threat_level=1
+- Confirm friendly soldier returns allegiance=friendly and threat_level=1
+- Confirm enemy drone returns enemy_drone and threat_level >= 6
+- Confirm invalid input falls back to unknown_contact
+
+test_scoring.py
+- Confirm higher threat level increases global score
+- Confirm closer enemy to objective scores higher
+- Confirm drone speed increases score
+- Confirm payload matching increases assignment score
+- Confirm neutral/non-threat is not targeted
+
+test_pathfinding.py
+- Confirm path starts near start and ends near goal
+- Confirm ground path avoids high-cost terrain when available
+- Confirm air entity direct path ignores terrain
+- Confirm pathfinding completes under time limit
+
+test_effects.py
+- Confirm C-UAS can neutralize drone in range
+- Confirm C-UAS does not target neutral/non-threat
+- Confirm EW suppresses enemy but does not kill
+- Confirm disabled entity remains visible and inactive
+- Confirm cooldown prevents repeated immediate effect
+
+test_simulation_step.py
+- Confirm timestep advances
+- Confirm entities move according to velocity/path
+- Confirm dead entities do not move
+- Confirm event log updates
+- Confirm mission ends when all enemies disabled
+
+test_report_writer.py
+- Confirm report files are created
+- Confirm entity CSV has required columns
+- Confirm summary JSON is valid
+
+test_scenario_loading.py
+- Confirm scenario JSON loads
+- Confirm defaults are applied
+- Confirm invalid scenario raises useful error
+
+29. ACCEPTANCE CRITERIA
+
+The MVP is acceptable when:
+
+A. Demo reliability
+- run_demo.py launches without manual setup beyond installing dependencies
+- mock mode works with no API key
+- simulation can run for 5 minutes without crashing
+- reset works
+- pause/resume works
+- screenshot works
+
+B. Visual clarity
+- friendlies and enemies are visually distinct
+- air and ground enemies use different shapes
+- dead entities remain as X
+- vectors are visible
+- priority table is visible
+- legend is visible
+- event log is visible
+
+C. AI classification
+- mock classification works
+- API mode can classify images when key is present
+- API failure does not crash demo
+- non-threat/friendly image categories are supported
+- classification cache prevents repeated calls
+
+D. Simulation logic
+- central battle manager produces ranked threats
+- local agents produce individual target choices
+- terrain affects ground movement
+- drones ignore terrain
+- effects change entity states abstractly
+- mission report is generated
+
+E. Test coverage
+- all required test files exist
+- all tests pass
+- tests are deterministic
+
+30. DEMO SCENARIO REQUIREMENTS
+
+The default demo scenario shall include:
+
+Friendly:
+- 1 ARIES-COMMS relay vehicle
+- 1 ARIES-EW vehicle
+- 1 ARIES-ISR vehicle
+- 1 ARIES-CUAS vehicle
+- 1 ARIES-EFFECT vehicle
+
+Enemy:
+- 3 enemy drones
+- 2 enemy ground vehicles
+- 1 enemy EW node
+- 1 unknown contact
+
+Neutral / non-threat:
+- 1 neutral civilian marker or non-threat object
+- optional puppy/non-threat classification image in classifier demo
+
+Map:
+- objective on right side
+- friendly base on left side
+- hills/contours between base and objective
+- at least one high-cost terrain region forcing ground routing
+- drones fly mostly straight across map
+
+Demo behavior:
+- ISR classifies unknown
+- C-UAS prioritizes drones
+- EW suppresses drone or enemy EW behavior
+- EFFECT vehicle moves toward ground threat
+- COMMS vehicle positions to support network
+- dead enemies remain on screen as X
+- report generated at end
+
+31. PRIORITY BUILD ORDER
+
+Build in this order:
+
+1. Data models
+2. Config loader
+3. Scenario loader
+4. Terrain generator
+5. Renderer with static entities
+6. Simulation loop
+7. Movement logic
+8. Pathfinding
+9. Global scoring
+10. Local scoring
+11. Effects
+12. Event log
+13. Reports
+14. Mock classifier
+15. API classifier
+16. Classification cache
+17. Tests
+18. Scenario builder
+19. Replay mode
+20. Polish
+
+Do not build API classification before the simulator works in mock mode.
+
+32. MVP NON-GOALS
+
+Do not implement:
+- real vehicle control
+- real radio interface
+- real jamming
+- real fire-control
+- real targeting pipelines
+- real munition behavior
+- realistic blast models
+- classified performance values
+- real map ingestion
+- multiplayer
+- networked software
+- complex game AI
+- physics engine
+- 3D graphics
+- hardware integration
+- live camera feed unless already trivial
+
+33. REQUIRED README CONTENT
+
+README.md shall include:
+- project description
+- installation instructions
+- how to run mock demo
+- how to run API classification
+- how to add images
+- how to run tests
+- how to create scenario
+- explanation of symbols
+- explanation of scoring
+- explanation of reports
+- statement that effects are abstract simulation-only representations
+
+34. SUGGESTED README QUICKSTART
+
+1. Install Python 3.11+
+2. Create virtual environment
+3. Install requirements:
+   pip install -r requirements.txt
+4. Run tests:
+   python run_tests.py
+5. Run demo:
+   python run_demo.py
+6. Optional API mode:
+   set OPENAI_API_KEY environment variable
+   set config.openai.enabled=true
+   set config.run_mode="api"
+   place images in data/images/
+   run python run_classifier.py
+
+35. REQUIREMENTS.TXT
+
+Recommended dependencies:
+pygame
+numpy
+pandas
+pillow
+openai
+pytest
+
+Optional:
+scipy
+
+36. DEMO SCRIPT FOR SOFTWARE SECTION
+
+Use this narration during the video:
+
+“This is the ARIES MVP. It is not controlling hardware. It is demonstrating the mission-effect orchestration logic that would assist teleoperators or future supervised autonomy. The map is a synthetic contour map. Friendly ARIES nodes are shown by payload type. Enemy drones are red downward triangles. Enemy ground threats are red diamonds. The system classifies image inputs, assigns threat levels from 1 to 10, computes global priority scores, computes each vehicle’s local target preference, routes ground vehicles around terrain, and resolves abstract effects. The right panel shows why the system is making each recommendation. At the end, the system exports a mission report that can be used to evaluate response time, threat reduction, network support, and objective protection.”
+
+37. FINAL MVP DEFINITION
+
+The ARIES MVP is complete when it can reliably show a senior technical audience that:
+- AI can classify potential battlefield entities from images
+- non-threat and friendly classifications are handled safely
+- enemy entities can be prioritized with explainable scoring
+- robotic ground nodes can be assigned useful roles based on payload type
+- terrain affects ground movement
+- drones behave differently than ground threats
+- central and local decision logic can coexist
+- a simple simulation can represent the value of distributed robotic ground effects
+- results can be logged, tested, and reported
