@@ -1,0 +1,11 @@
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+outputs/temp/
+outputs/classification_cache.json
+outputs/reports/*
+outputs/replays/*
+outputs/*.png
+!outputs/reports/.gitkeep
+!outputs/replays/.gitkeep

@@ -1,0 +1,43 @@
+{
+  "scenario_name": "Simple Test Scenario",
+  "description": "Small deterministic scenario for unit tests.",
+  "map": {
+    "width": 300,
+    "height": 200,
+    "terrain_seed": 42,
+    "contour_count": 6,
+    "objective_position": [260, 100],
+    "friendly_base_position": [30, 100]
+  },
+  "friendly_entities": [
+    {
+      "id": "CUAS1",
+      "name": "Test C-UAS",
+      "allegiance": "friendly",
+      "domain": "ground",
+      "entity_type": "friendly_cuas",
+      "payload_type": "cuas",
+      "position": [45, 100],
+      "speed": 25,
+      "effect_range": 70,
+      "effect_probability": 1.0,
+      "effect_cooldown_steps": 2,
+      "magazine": 4
+    }
+  ],
+  "enemy_entities": [
+    {
+      "id": "D1",
+      "name": "Test Drone",
+      "allegiance": "enemy",
+      "domain": "air",
+      "entity_type": "enemy_drone",
+      "position": [95, 100],
+      "speed": 10,
+      "threat_level": 8,
+      "confidence": 0.9
+    }
+  ],
+  "neutral_entities": [],
+  "image_assignments": []
+}

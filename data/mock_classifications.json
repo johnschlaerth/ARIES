@@ -1,0 +1,68 @@
+{
+  "enemy_drone.jpg": {
+    "name": "small enemy drone",
+    "allegiance": "enemy",
+    "domain": "air",
+    "entity_type": "enemy_drone",
+    "threat_level": 8,
+    "confidence": 0.91,
+    "description": "A small aerial threat consistent with an enemy drone.",
+    "rationale": "Aerial profile and mission context indicate an enemy drone.",
+    "should_spawn_in_simulation": true
+  },
+  "friendly_soldier.jpg": {
+    "name": "friendly soldier",
+    "allegiance": "friendly",
+    "domain": "ground",
+    "entity_type": "friendly_human",
+    "threat_level": 1,
+    "confidence": 0.88,
+    "description": "A friendly or allied military person.",
+    "rationale": "Friendly classification must not become an enemy target.",
+    "should_spawn_in_simulation": false
+  },
+  "puppy.jpg": {
+    "name": "puppy",
+    "allegiance": "neutral",
+    "domain": "non_threat",
+    "entity_type": "non_threat_animal",
+    "threat_level": 1,
+    "confidence": 0.96,
+    "description": "A non-threat animal.",
+    "rationale": "Animals are not valid enemy targets.",
+    "should_spawn_in_simulation": false
+  },
+  "random_object.jpg": {
+    "name": "random object",
+    "allegiance": "neutral",
+    "domain": "non_threat",
+    "entity_type": "non_threat_object",
+    "threat_level": 1,
+    "confidence": 0.8,
+    "description": "A non-threat object.",
+    "rationale": "No enemy indicators are present.",
+    "should_spawn_in_simulation": false
+  },
+  "enemy_ground_vehicle.jpg": {
+    "name": "enemy ground vehicle",
+    "allegiance": "enemy",
+    "domain": "ground",
+    "entity_type": "enemy_ground_vehicle",
+    "threat_level": 7,
+    "confidence": 0.85,
+    "description": "A ground vehicle treated as an enemy threat in the scenario.",
+    "rationale": "Ground vehicle signature and scenario metadata indicate an enemy entity.",
+    "should_spawn_in_simulation": true
+  },
+  "default_unknown": {
+    "name": "unknown contact",
+    "allegiance": "unknown",
+    "domain": "ground",
+    "entity_type": "unknown_contact",
+    "threat_level": 3,
+    "confidence": 0.2,
+    "description": "Unknown contact with low confidence.",
+    "rationale": "No matching mock classification was found.",
+    "should_spawn_in_simulation": true
+  }
+}

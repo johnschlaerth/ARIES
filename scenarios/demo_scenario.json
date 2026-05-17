@@ -1,0 +1,176 @@
+{
+  "scenario_name": "ARIES Demo Scenario",
+  "description": "Mixed air and ground threat scenario for the ARIES MVP.",
+  "map": {
+    "width": 1000,
+    "height": 700,
+    "terrain_seed": 123,
+    "contour_count": 12,
+    "objective_position": [850, 350],
+    "friendly_base_position": [100, 350]
+  },
+  "friendly_entities": [
+    {
+      "id": "COMMS1",
+      "name": "ARIES-COMMS Relay",
+      "allegiance": "friendly",
+      "domain": "ground",
+      "entity_type": "friendly_comms",
+      "payload_type": "comms",
+      "position": [95, 320],
+      "speed": 13,
+      "effect_range": 0,
+      "network_radius": 230,
+      "sensor_radius": 120
+    },
+    {
+      "id": "EW1",
+      "name": "ARIES-EW",
+      "allegiance": "friendly",
+      "domain": "ground",
+      "entity_type": "friendly_ew",
+      "payload_type": "ew",
+      "position": [120, 260],
+      "speed": 24,
+      "effect_range": 140,
+      "effect_probability": 1.0,
+      "sensor_radius": 140
+    },
+    {
+      "id": "ISR1",
+      "name": "ARIES-ISR",
+      "allegiance": "friendly",
+      "domain": "ground",
+      "entity_type": "friendly_isr",
+      "payload_type": "isr",
+      "position": [120, 395],
+      "speed": 24,
+      "effect_range": 180,
+      "sensor_radius": 230
+    },
+    {
+      "id": "CUAS1",
+      "name": "ARIES-CUAS",
+      "allegiance": "friendly",
+      "domain": "ground",
+      "entity_type": "friendly_cuas",
+      "payload_type": "cuas",
+      "position": [145, 200],
+      "speed": 30,
+      "effect_range": 150,
+      "effect_probability": 0.9,
+      "effect_cooldown_steps": 3,
+      "magazine": 8
+    },
+    {
+      "id": "EFFECT1",
+      "name": "ARIES-EFFECT",
+      "allegiance": "friendly",
+      "domain": "ground",
+      "entity_type": "friendly_effect",
+      "payload_type": "effect",
+      "position": [145, 500],
+      "speed": 26,
+      "effect_range": 120,
+      "effect_probability": 0.85,
+      "effect_cooldown_steps": 4,
+      "magazine": 8
+    }
+  ],
+  "enemy_entities": [
+    {
+      "id": "DRONE1",
+      "name": "Enemy Drone 1",
+      "allegiance": "enemy",
+      "domain": "air",
+      "entity_type": "enemy_drone",
+      "position": [990, 35],
+      "speed": 4.5,
+      "threat_level": 8,
+      "confidence": 0.92,
+      "effect_range": 80
+    },
+    {
+      "id": "DRONE2",
+      "name": "Enemy Drone 2",
+      "allegiance": "enemy",
+      "domain": "air",
+      "entity_type": "enemy_drone",
+      "position": [990, 665],
+      "speed": 4.0,
+      "threat_level": 7,
+      "confidence": 0.88
+    },
+    {
+      "id": "DRONE3",
+      "name": "Enemy Drone 3",
+      "allegiance": "enemy",
+      "domain": "air",
+      "entity_type": "enemy_drone",
+      "position": [975, 105],
+      "speed": 3.8,
+      "threat_level": 6,
+      "confidence": 0.82
+    },
+    {
+      "id": "GROUND1",
+      "name": "Enemy Ground Vehicle 1",
+      "allegiance": "enemy",
+      "domain": "ground",
+      "entity_type": "enemy_ground_vehicle",
+      "position": [960, 230],
+      "speed": 3.2,
+      "threat_level": 7,
+      "confidence": 0.84
+    },
+    {
+      "id": "GROUND2",
+      "name": "Enemy Ground Vehicle 2",
+      "allegiance": "enemy",
+      "domain": "ground",
+      "entity_type": "enemy_ground_vehicle",
+      "position": [965, 500],
+      "speed": 3.0,
+      "threat_level": 6,
+      "confidence": 0.8
+    },
+    {
+      "id": "EWE1",
+      "name": "Enemy EW Node",
+      "allegiance": "enemy",
+      "domain": "ground",
+      "entity_type": "enemy_ew",
+      "position": [940, 350],
+      "speed": 1.5,
+      "threat_level": 9,
+      "confidence": 0.86,
+      "effect_range": 180
+    },
+    {
+      "id": "UNK1",
+      "name": "Unknown Contact",
+      "allegiance": "unknown",
+      "domain": "ground",
+      "entity_type": "unknown_contact",
+      "position": [900, 590],
+      "speed": 2.5,
+      "threat_level": 4,
+      "confidence": 0.35
+    }
+  ],
+  "neutral_entities": [
+    {
+      "id": "NEUT1",
+      "name": "Neutral Marker",
+      "allegiance": "neutral",
+      "domain": "non_threat",
+      "entity_type": "non_threat_object",
+      "position": [500, 110],
+      "speed": 0,
+      "threat_level": 1,
+      "confidence": 0.95,
+      "description": "Non-threat object used to verify safe classification behavior."
+    }
+  ],
+  "image_assignments": []
+}

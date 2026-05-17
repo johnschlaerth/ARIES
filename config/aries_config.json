@@ -1,0 +1,42 @@
+{
+  "run_mode": "mock",
+  "openai": {
+    "enabled": false,
+    "model": "gpt-4o-mini",
+    "api_key_env_var": "OPENAI_API_KEY",
+    "timeout_seconds": 20,
+    "max_retries": 2,
+    "image_max_side_px": 512,
+    "cache_results": true
+  },
+  "simulation": {
+    "seed": 42,
+    "time_step_seconds": 1.0,
+    "max_steps": 600,
+    "auto_start": false,
+    "start_paused": true,
+    "friendly_fire_enabled": false,
+    "terrain_enabled": true,
+    "network_enabled": true,
+    "output_reports": true,
+    "record_replay": true
+  },
+  "display": {
+    "width": 1400,
+    "height": 900,
+    "fps": 30,
+    "style": "retro_1980s",
+    "show_vectors": true,
+    "show_paths": true,
+    "show_scores": true,
+    "show_legend": true,
+    "show_event_log": true
+  },
+  "paths": {
+    "scenario_file": "scenarios/demo_scenario.json",
+    "image_folder": "data/images",
+    "classification_cache": "outputs/classification_cache.json",
+    "report_folder": "outputs/reports",
+    "replay_folder": "outputs/replays"
+  }
+}
